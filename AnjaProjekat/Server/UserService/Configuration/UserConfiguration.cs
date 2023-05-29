@@ -23,6 +23,8 @@ namespace UserService.Configuration
             builder.Property(user => user.LastName).HasMaxLength(60);
             builder.Property(user => user.LastName).IsRequired();
             builder.Property(user => user.DateOfBirth).IsRequired();
+            builder.Property(user => user.Address).IsRequired(false);
+            builder.Property(user => user.ImageURL).IsRequired(false);
             builder.Property(user => user.UserRole).HasConversion(new EnumToStringConverter<UserRole>());
         }
     }

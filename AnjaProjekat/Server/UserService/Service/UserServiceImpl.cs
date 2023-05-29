@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using UserService.Data;
 using UserService.DTO;
+using UserService.Exceptions;
 using UserService.Model;
 using UserService.Service.Interface;
 
@@ -29,6 +30,11 @@ namespace UserService.Service
         {
             User user = _dbContext.Users.FirstOrDefault(u => u.Username == login.Username);
 
+
+            if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
+            {
+                throw new CredentialsException("Incorrect login credentials!");
+            }
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -52,6 +58,19 @@ namespace UserService.Service
             loginResult.Token = token;
 
             return loginResult;
+
+        }
+
+        public async Task<bool> register(RegisterDTO registerDTO)
+        {
+            User user = _mapper.Map<User>(registerDTO);
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            return true;
 
         }
     }

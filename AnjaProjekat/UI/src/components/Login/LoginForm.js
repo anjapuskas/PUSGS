@@ -63,12 +63,9 @@ const LoginForm = () => {
           />
           <button type="submit" className={styles.button}>Login</button>
         </form>
-        <form onSubmit={handleHomeSubmit} className={styles.form}>
-{/*         <p className={styles.registrationLink}>
+        <p className={styles.registrationLink}>
           Don't have an account? <a href="/register">Register here</a>
-        </p> */}
-        <button type="submit" className={styles.button}>Home</button>
-        </form>
+        </p> 
       </div>
     </div>
   );

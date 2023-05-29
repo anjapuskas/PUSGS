@@ -24,6 +24,13 @@ namespace UserService.Controllers
             return Ok(loginResult);
         }
 
+        [HttpPost("register")]
+        public async Task<IActionResult> register([FromBody]RegisterDTO registerDTO)
+        {
+            Boolean boolean= await _userService.register(registerDTO);
+            return Ok(boolean);
+        }
+
         [HttpGet("home")]
         [Authorize]
         public string home(LoginAttemptDTO loginDTO)

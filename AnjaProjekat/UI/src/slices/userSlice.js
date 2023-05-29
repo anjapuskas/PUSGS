@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Home, Login } from "services/UserService";
+import { Home, Login, Register } from "services/UserService";
 
 const initialState = {
-    token: localStorage.getItem("token")
+    token: localStorage.getItem("token"),
+    loggedIn: localStorage.getItem("token") == null
   };
   
   export const loginAction = createAsyncThunk(
@@ -31,8 +32,21 @@ const initialState = {
     }
   );
 
+  export const registerAction = createAsyncThunk(
+    "user/register",
+    async (data, thunkApi) => {
+      try {
+      
+        const response = await Register(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
   const userSlice = createSlice({
-    name: 'user',
+    name: "user",
     initialState,
     reducers: {
         logout: (state) => {},
@@ -41,8 +55,12 @@ const initialState = {
         builder.addCase(loginAction.fulfilled, (state, action) => {
           const token = action.payload.token;
           state.token = token;
+          state.loggedIn = true;
     
           localStorage.setItem("token", token);
+        });
+        builder.addCase(registerAction.fulfilled, (state, action) => {
+          
         });
     }
 });

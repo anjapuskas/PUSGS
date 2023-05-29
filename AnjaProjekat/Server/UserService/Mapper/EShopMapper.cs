@@ -9,6 +9,7 @@ namespace UserService.Mapper
         public EShopMapper()
         {
             CreateMap<User, LoginResultDTO>().ReverseMap();
+            CreateMap<RegisterDTO, User>().ReverseMap();
         }
     }
 }
