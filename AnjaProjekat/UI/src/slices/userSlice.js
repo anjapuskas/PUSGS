@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 import { Home, Login, Register } from "services/UserService";
 
 const initialState = {
-    token: localStorage.getItem("token"),
-    loggedIn: localStorage.getItem("token") == null
-  };
+  token: localStorage.getItem("token"),
+  loggedIn: localStorage.getItem("token") != null,
+};
   
   export const loginAction = createAsyncThunk(
     "user/login",
@@ -49,7 +50,11 @@ const initialState = {
     name: "user",
     initialState,
     reducers: {
-        logout: (state) => {},
+      logout: (state) => {
+        state.token = null;
+        state.loggedIn = false;
+        localStorage.removeItem("token");
+      },
     },
     extraReducers: (builder) => {
         builder.addCase(loginAction.fulfilled, (state, action) => {
