@@ -2,6 +2,7 @@ import HomeForm from "components/Home/HomeForm";
 import RegistrationForm from "components/Registration/RegistrationForm";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
+import ProfilePage from "pages/ProfilePage";
 import RegistrationPage from "pages/RegistrationPage";
 import { useSelector } from "react-redux";
 
@@ -28,6 +29,7 @@ const AppRoutes = () => {
         {loggedIn && (
             <>
                 <Route path="" element={<HomePage />}></Route>
+                <Route path="/profile" element={<ProfilePage />}></Route>
                 <Route path="*" element={<Navigate replace to={""} />} />
             </>
           )}

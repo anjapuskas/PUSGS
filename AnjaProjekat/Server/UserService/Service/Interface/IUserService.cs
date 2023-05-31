@@ -7,5 +7,8 @@ namespace UserService.Service.Interface
         Task<LoginResultDTO> login(LoginAttemptDTO login);
 
         Task<Boolean> register(RegisterDTO registerDTO);
+
+        Task<Boolean> updateProfile(ProfileDTO profileDTO);
+        Task<ProfileImageDTO> getProfileImage(long id);
     }
 }

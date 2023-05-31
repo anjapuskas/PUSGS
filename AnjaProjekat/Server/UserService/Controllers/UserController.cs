@@ -37,5 +37,21 @@ namespace UserService.Controllers
         {
             return "Hello world";
         }
+
+        [Authorize]
+        [HttpPut("profile")]
+        public async Task<IActionResult> profile([FromForm]ProfileDTO profileDTO)
+        {
+            Boolean boolean = await _userService.updateProfile(profileDTO);
+            return (Ok(boolean));
+        }
+
+        [Authorize]
+        [HttpGet("profile/image/{id}")]
+        public async Task<IActionResult> profileImage(long id)
+        {
+            ProfileImageDTO file = await _userService.getProfileImage(id);
+            return File(file.File, "application/octet-stream", file.Name);
+        }
     }
 }
