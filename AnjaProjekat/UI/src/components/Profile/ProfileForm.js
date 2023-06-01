@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { profileAction, profileImageAction } from 'slices/userSlice';
 import ImageUploader from 'components/Shared/ImageUploader';
 import { useDispatch, useSelector } from 'react-redux';
+import Navigation from 'components/Navigation/Navigation';
 
 const ProfileForm = () => {
     const dispatch = useDispatch();
@@ -58,59 +59,62 @@ const ProfileForm = () => {
     };
       
     return (
-        <Container className={styles.container}>
-          <div className={styles.formContainer}>
-            <Typography variant="h2" component="h2" className={styles.title}>
-              Profile
-            </Typography>
-            <form className={styles.form} onSubmit={handleSubmit}>
-            <ImageUploader
-            selectedImage={selectedImage ? selectedImage : user.imageSrc}
-            handleImageChange={handleImageChange}
-          />
-              <TextField
-                className={styles.input}
-                label="First Name"
-                name="firstName"
-                defaultValue={user.firstName}
-                onChange={handleInputChange}
-              />
-              <TextField
-                className={styles.input}
-                label="Last Name"
-                name="lastName"
-                defaultValue={user.lastName}
-                onChange={handleInputChange}
-              />
-              <TextField
-                className={styles.input}
-                label="Address"
-                name="address"
-                defaultValue={user.address}
-                onChange={handleInputChange}
-              />
-                <DesktopDatePicker
-                    format="dd/MM/yyyy"
-                    // @ts-ignore
-                    fullWidth
-                    disableFuture
-                    label="Birthday"
-                    error={isDateTouched && !isDateValid}
-                    onChange={(value) => dateChangeHandler(new Date(value))}
-                    value = {date}
-                  />
-              <Button
-                type="submit"
-                variant="contained"
-                className={styles.button}
-              >
-                Update
-              </Button>
-            </form>
-          </div>
-        </Container>
-      );
-    };
+      <>
+      <Navigation/>
+      <Container className={styles.container}>
+        <div className={styles.formContainer}>
+          <Typography variant="h2" component="h2" className={styles.title}>
+            Profile
+          </Typography>
+          <form className={styles.form} onSubmit={handleSubmit}>
+          <ImageUploader
+          selectedImage={selectedImage ? selectedImage : user.imageSrc}
+          handleImageChange={handleImageChange}
+        />
+            <TextField
+              className={styles.input}
+              label="First Name"
+              name="firstName"
+              defaultValue={user.firstName}
+              onChange={handleInputChange}
+            />
+            <TextField
+              className={styles.input}
+              label="Last Nassme"
+              name="lastName"
+              defaultValue={user.lastName}
+              onChange={handleInputChange}
+            />
+            <TextField
+              className={styles.input}
+              label="Address"
+              name="address"
+              defaultValue={user.address}
+              onChange={handleInputChange}
+            />
+              <DesktopDatePicker
+                  format="dd/MM/yyyy"
+                  // @ts-ignore
+                  fullWidth
+                  disableFuture
+                  label="Birthday"
+                  error={isDateTouched && !isDateValid}
+                  onChange={(value) => dateChangeHandler(new Date(value))}
+                  value = {date}
+                />
+            <Button
+              type="submit"
+              variant="contained"
+              className={styles.button}
+            >
+              Update
+            </Button>
+          </form>
+        </div>
+      </Container>
+    </>
+  );
+};
 
 export default ProfileForm;
 

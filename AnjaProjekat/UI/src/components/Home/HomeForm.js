@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { Divider, ListItemIcon, MenuItem, Menu } from '@mui/material';
 import { AccountCircle, Logout } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
+import Navigation from 'components/Navigation/Navigation';
 
 const HomeForm = () => {
   const dispatch = useDispatch();
@@ -32,36 +33,7 @@ const HomeForm = () => {
 
   return (
     <div className={styles.container}>
-      <nav className={styles.navbar}>
-        <div className={styles.logo}>My Website</div>
-        <div>
-          <AccountCircle
-            fontSize="medium"
-            className={styles.profileIcon}
-            onClick={handleMenuOpen}
-          />
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            className={styles.menu}
-          >
-            <MenuItem onClick={handleProfileClick}>
-              <ListItemIcon>
-                <AccountCircle fontSize="small" />
-              </ListItemIcon>
-              Profile
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={handleLogoutClick}>
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </Menu>
-        </div>
-      </nav>
+      <Navigation/>
       <div className={styles.content}>
         <h1>Welcome to the Home Page</h1>
         {/* Add your content here */}

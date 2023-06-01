@@ -38,9 +38,9 @@ namespace UserService.Controllers
             return "Hello world";
         }
 
+        [HttpPut]
         [Authorize]
-        [HttpPut("profile")]
-        public async Task<IActionResult> profile([FromForm]ProfileDTO profileDTO)
+        public async Task<IActionResult> Put([FromForm] ProfileDTO profileDTO)
         {
             Boolean boolean = await _userService.updateProfile(profileDTO);
             return (Ok(boolean));

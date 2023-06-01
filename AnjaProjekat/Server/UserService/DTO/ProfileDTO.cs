@@ -9,6 +9,5 @@ namespace UserService.DTO
         public string LastName { get; set; }
         public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public IFormFile Image { get; set; }
     }
 }

@@ -81,7 +81,7 @@ namespace UserService.Service
             user.LastName = profileDTO.LastName;
             user.Address = profileDTO.Address;
             user.DateOfBirth = profileDTO.DateOfBirth;
-            user.Image= resolveImage(user.Image, profileDTO.Image, user.Username);
+            //user.Image= resolveImage(user.Image, profileDTO.Image, user.Username);
             _dbContext.Users.Update(user);
             _dbContext.SaveChanges();
             return true;
