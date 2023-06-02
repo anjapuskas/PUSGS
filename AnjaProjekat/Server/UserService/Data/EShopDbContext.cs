@@ -6,6 +6,7 @@ namespace UserService.Data
     public class EShopDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Product> Product { get; set; }
 
         public EShopDbContext(DbContextOptions<EShopDbContext> options) : base(options) { }
 

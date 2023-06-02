@@ -10,7 +10,7 @@ namespace UserService.Configuration
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(user => user.Id);
-            builder.Property(user=> user.Id).ValueGeneratedOnAdd();
+            builder.Property(user => user.Id).ValueGeneratedOnAdd();
             builder.Property(user => user.Username).HasMaxLength(30);
             builder.Property(user => user.Username).IsRequired();
             builder.HasIndex(user => user.Username).IsUnique();

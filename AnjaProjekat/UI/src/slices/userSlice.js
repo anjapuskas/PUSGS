@@ -88,7 +88,7 @@ const initialState = {
           const token = action.payload.token;
           state.token = token;
           state.loggedIn = true;
-          state.user = action.payload
+          state.user = action.payload;
     
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(action.payload));

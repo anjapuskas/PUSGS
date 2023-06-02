@@ -62,6 +62,7 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<IUserService, UserServiceImpl>();
+builder.Services.AddScoped<IProductService, ProductServiceImpl>();
 
 var app = builder.Build();
 

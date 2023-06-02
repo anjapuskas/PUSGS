@@ -1,5 +1,6 @@
 import HomeForm from "components/Home/HomeForm";
 import RegistrationForm from "components/Registration/RegistrationForm";
+import AddProductPage from "pages/AddProductPage";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
 import ProfilePage from "pages/ProfilePage";
@@ -16,6 +17,12 @@ const AppRoutes = () => {
      const state = useSelector((state) => state);
      // @ts-ignore
      const loggedIn = useSelector((state) => state.user.loggedIn);
+     // @ts-ignore
+     const userRole = useSelector((state) => state.user.user.userRole);
+
+     const isBuyer = userRole == "BUYER";
+     const isSeller = userRole == "SELLER";
+     const isAdmin = userRole == "ADMIN";
 
     return (
         <Routes>
@@ -30,6 +37,9 @@ const AppRoutes = () => {
             <>
                 <Route path="" element={<HomePage />}></Route>
                 <Route path="/profile" element={<ProfilePage />}></Route>
+                {isSeller && (
+                  <Route path="/add-product" element={<AddProductPage />} />
+                )}
                 <Route path="*" element={<Navigate replace to={""} />} />
             </>
           )}

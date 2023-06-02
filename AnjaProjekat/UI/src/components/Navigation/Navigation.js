@@ -29,6 +29,10 @@ const Navigation = () => {
     handleMenuClose();
   };
 
+  const handleAddProductClick = () => {
+    navigate('/add-product');
+  };
+
   const handleLogoutClick = () => {
     dispatch(logout());
     handleMenuClose();
@@ -38,6 +42,9 @@ const Navigation = () => {
     <div className={styles.container}>
       <nav className={styles.navbar}>
         <div className={styles.logo} onClick={handleLogoClick}>My Website</div>
+        <div className={styles.addProduct} onClick={handleAddProductClick}>
+          Add Product
+        </div>
         <div>
           <AccountCircle
             fontSize="medium"
