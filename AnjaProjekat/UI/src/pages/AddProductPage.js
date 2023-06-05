@@ -1,4 +1,5 @@
-import AddProductForm from "components/Product/AddProductForm";
+
+import AddProductForm from "components/Product/forms/AddProductForm";
 import React from "react";
 
 

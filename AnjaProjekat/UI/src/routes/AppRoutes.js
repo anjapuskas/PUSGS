@@ -3,6 +3,7 @@ import RegistrationForm from "components/Registration/RegistrationForm";
 import AddProductPage from "pages/AddProductPage";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
+import ProductListPage from "pages/ProductListPage";
 import ProfilePage from "pages/ProfilePage";
 import RegistrationPage from "pages/RegistrationPage";
 import { useSelector } from "react-redux";
@@ -40,6 +41,7 @@ const AppRoutes = () => {
                 {isSeller && (
                   <Route path="/add-product" element={<AddProductPage />} />
                 )}
+                <Route path="products" element={<ProductListPage />} />
                 <Route path="*" element={<Navigate replace to={""} />} />
             </>
           )}

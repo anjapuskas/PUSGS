@@ -4,6 +4,7 @@ import { Button, Container, TextField, Typography } from '@mui/material';
 import { DatePicker, DesktopDatePicker } from '@mui/x-date-pickers';
 import { useDispatch } from 'react-redux';
 import { addProductAction } from 'slices/productSlice';
+import Navigation from 'components/Navigation/Navigation';
 
 const AddProductForm = () => {
   const [productName, setProductName] = useState('');
@@ -45,6 +46,8 @@ const AddProductForm = () => {
   };
 
   return (
+    <>
+    <Navigation/>
     <Container className={styles.container}>
       <div className={styles.formContainer}>
         <Typography variant="h2" component="h2" className={styles.title}>
@@ -87,6 +90,7 @@ const AddProductForm = () => {
         </form>
       </div>
     </Container>
+    </>
   );
 };
 

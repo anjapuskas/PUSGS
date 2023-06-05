@@ -5,12 +5,10 @@
   }
   
   .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 10px 20px;
+    margin-bottom: 20px;
   }
   
   .logo {
@@ -53,22 +51,4 @@
     align-items: center;
     padding: 40px;
     text-align: center;
-  }
-
-  .addProduct {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    background-color: #f5f5f5;
-    color: #333;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
-  }
-  
-  .addProduct:hover {
-    background-color: #e0e0e0;
   }

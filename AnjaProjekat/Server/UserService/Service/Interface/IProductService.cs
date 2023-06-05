@@ -4,7 +4,9 @@ namespace UserService.Service.Interface
 {
     public interface IProductService
     {
-        Task<Boolean> addProduct(AddProductDTO addProductDTO);
+        Task<Boolean> addProduct(ProductDTO addProductDTO);
+
+        Task<List<ProductDTO>> getAllProducts();
 
     }
 }

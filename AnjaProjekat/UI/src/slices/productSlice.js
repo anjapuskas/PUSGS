@@ -1,19 +1,29 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
-import { AddProduct } from "services/ProductService";
+import { AddProduct, GetAllProducts } from "services/ProductService";
 import { Home, Login, Profile, ProfileImage, Register } from "services/UserService";
 
 const initialState = {
-  token: localStorage.getItem("token"),
-  loggedIn: localStorage.getItem("token") != null,
-  user: localStorage.getItem("user") != null ? JSON.parse(localStorage.getItem("user")) : null
+  products : []
 };
   
   export const addProductAction = createAsyncThunk(
-    "product/add",
+    "products/add",
     async (data, thunkApi) => {
       try {
         const response = await AddProduct(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
+  export const getAllProductsAction = createAsyncThunk(
+    "products",
+    async (data, thunkApi) => {
+      try {
+        const response = await GetAllProducts();
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
         return thunkApi.rejectWithValue(error.response.error);
@@ -28,6 +38,9 @@ const initialState = {
     },
     extraReducers: (builder) => {
         builder.addCase(addProductAction.fulfilled, (state, action) => {
+        });
+        builder.addCase(getAllProductsAction.fulfilled, (state, action) => {
+          state.products = action.payload;
         });
     }
     

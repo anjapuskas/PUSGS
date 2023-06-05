@@ -18,7 +18,7 @@ namespace UserService.Service
             _dbContext = dbContext;
         }
 
-        public async Task<bool> addProduct(AddProductDTO addProductDTO)
+        public async Task<bool> addProduct(ProductDTO addProductDTO)
         {
             Product product = _mapper.Map<Product>(addProductDTO);
             product.Image = "";
@@ -27,6 +27,18 @@ namespace UserService.Service
             _dbContext.SaveChanges();
 
            return true;
+        }
+
+        public async Task<List<ProductDTO>> getAllProducts()
+        {
+            List<Product> products = _dbContext.Product.ToList();
+            List<ProductDTO> productDTOs = new List<ProductDTO>();
+            foreach (Product product in products)
+            {
+                productDTOs.Add(_mapper.Map<ProductDTO>(product));
+            }
+
+            return productDTOs;
         }
     }
 }

@@ -30,12 +30,8 @@
   padding: 12px;
   border-radius: 4px;
   border: 1px solid #dddddd;
-  margin-bottom: 10px;
-  font-size: 16px;
-}
-
-.input:last-child {
   margin-bottom: 20px;
+  font-size: 16px;
 }
 
 .datePicker {
@@ -54,20 +50,4 @@
 
 .button:hover {
   background-color: #1976D2;
-}
-
-.registrationLink {
-  text-align: center;
-  color: #333333;
-  font-size: 16px;
-  margin-top: 20px;
-}
-
-.registrationLink a {
-  color: #2196F3;
-  text-decoration: none;
-}
-
-.registrationLink a:hover {
-  text-decoration: underline;
 }

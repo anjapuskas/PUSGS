@@ -2,11 +2,12 @@
 
 namespace UserService.DTO
 {
-    public class AddProductDTO
+    public class ProfileDTO
     {
-        public string Name { get; set; }
-        public double Price { get; set; }
-        public int Amount { get; set; }
-        public string Description { get; set; }
+        public int Id { get; set; }     
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Address { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 }

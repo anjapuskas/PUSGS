@@ -4,6 +4,7 @@
     align-items: center;
     min-height: 100vh;
     background-color: #f2f2f2;
+    padding-top: 20px;
   }
   
   .formContainer {
@@ -11,6 +12,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     padding: 40px;
+    padding-top: 20px;
   }
   
   .title {
