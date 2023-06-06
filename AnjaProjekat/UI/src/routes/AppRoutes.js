@@ -1,6 +1,7 @@
 import HomeForm from "components/Home/HomeForm";
 import RegistrationForm from "components/Registration/RegistrationForm";
 import AddProductPage from "pages/AddProductPage";
+import CartPage from "pages/CartPage";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
 import ProductListPage from "pages/ProductListPage";
@@ -15,11 +16,11 @@ const { Routes, Route, Navigate } = require("react-router-dom");
 const AppRoutes = () => {
 
     // @ts-ignore
-     const state = useSelector((state) => state);
+     const user = useSelector((state) => state.user.user);
      // @ts-ignore
      const loggedIn = useSelector((state) => state.user.loggedIn);
      // @ts-ignore
-     const userRole = useSelector((state) => state.user.user.userRole);
+     const userRole = user ? user.userRole : null;
 
      const isBuyer = userRole == "BUYER";
      const isSeller = userRole == "SELLER";
@@ -38,11 +39,18 @@ const AppRoutes = () => {
             <>
                 <Route path="" element={<HomePage />}></Route>
                 <Route path="/profile" element={<ProfilePage />}></Route>
+                <Route path="*" element={<Navigate replace to={""} />} />
                 {isSeller && (
                   <Route path="/add-product" element={<AddProductPage />} />
                 )}
-                <Route path="products" element={<ProductListPage />} />
-                <Route path="*" element={<Navigate replace to={""} />} />
+                {isBuyer && (
+                  <Route path="/products" element={<ProductListPage />} />
+                )}
+                {isBuyer && (
+                  <Route path="/cart" element={<CartPage />} />
+                )}
+                
+                
             </>
           )}
 

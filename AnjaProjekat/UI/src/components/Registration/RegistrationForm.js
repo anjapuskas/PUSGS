@@ -85,30 +85,35 @@ const RegistrationForm = () => {
         </Typography>
         <form className={styles.form} onSubmit={handleSubmit}>
           <TextField
+            margin="normal"
             className={styles.input}
             label="Username"
             name="username"
             onChange={handleInputChange}
           />
           <TextField
+            margin="normal"
             className={styles.input}
             label="First Name"
             name="firstName"
             onChange={handleInputChange}
           />
           <TextField
+            margin="normal"
             className={styles.input}
             label="Last Name"
             name="lastName"
             onChange={handleInputChange}
           />
           <TextField
+            margin="normal"
             className={styles.input}
             label="Email"
             name="email"
             onChange={handleInputChange}
           />
           <TextField
+            margin="normal"
             className={styles.input}
             label="Password"
             name="password"
@@ -116,6 +121,7 @@ const RegistrationForm = () => {
             onChange={handleInputChange}
           />
           <TextField
+            margin="normal"
             className={styles.input}
             label="Repeat Password"
             name="passwordRepeat"
@@ -123,6 +129,7 @@ const RegistrationForm = () => {
             onChange={handleInputChange}
           />
           <TextField
+            margin="normal"
             className={styles.input}
             label="Address"
             name="address"

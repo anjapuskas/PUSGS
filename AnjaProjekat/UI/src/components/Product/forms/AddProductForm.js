@@ -55,6 +55,7 @@ const AddProductForm = () => {
         </Typography>
         <form className={styles.form} onSubmit={handleSubmit}>
           <TextField
+            margin="normal"
             className={styles.input}
             label="Product Name"
             name="productName"
@@ -62,6 +63,7 @@ const AddProductForm = () => {
             onChange={handleProductNameChange}
           />
           <TextField
+            margin="normal"
             className={styles.input}
             label="Price"
             name="price"
@@ -69,6 +71,7 @@ const AddProductForm = () => {
             onChange={handlePriceChange}
          />
         <TextField
+            margin="normal"
             className={styles.input}
             label="Amount"
             name="amount"
@@ -76,6 +79,7 @@ const AddProductForm = () => {
             onChange={handleAmountChange}
           />
           <TextField
+            margin="normal"
             className={styles.input}
             label="Description"
             name="description"

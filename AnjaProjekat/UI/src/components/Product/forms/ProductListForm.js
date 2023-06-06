@@ -38,7 +38,10 @@ const ProductListForm = () => {
         <Typography variant="h2" component="h2" className={styles.title}>
           Add Product
         </Typography>
-        <Grid container sx={{ display: "flex", flexDirection: "row" }}>
+        <Grid container sx={{ 
+        display: "flex",
+        flexDirection: "row" 
+        }}>
           {items}
         </Grid>
       </div>

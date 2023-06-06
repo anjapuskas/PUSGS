@@ -7,13 +7,15 @@ import { useNavigate } from 'react-router-dom';
 import { logout } from 'slices/userSlice';
 import styles from './Navigation.module.css';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const Navigation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const userRole = useSelector((state) => state.user.user.userRole);
-
+  const numberOfItemsInCart = useSelector((state) => state.cart.amount);
+  
   const isSeller = userRole === 'SELLER';
   const isBuyer = userRole === 'BUYER';
 
@@ -40,6 +42,10 @@ const Navigation = () => {
 
   const handleProductsClick = () => {
     navigate('/products');
+  };
+
+  const handleCartClick = () => {
+    navigate('/cart');
   };
 
   const handleLogoutClick = () => {
@@ -80,6 +86,14 @@ const Navigation = () => {
             </div>
           )}
           <div style={{ flexGrow: 1 }} />
+          {isBuyer && (
+            <div>
+              <IconButton edge="start" color="inherit" onClick={handleCartClick}>
+                <ShoppingCartIcon />
+                {numberOfItemsInCart > 0 && <span className={styles.cartItemCount}>{numberOfItemsInCart}</span>}
+              </IconButton>
+            </div>
+          )}
           <IconButton color="inherit" onClick={handleMenuOpen}>
             <AccountCircle />
           </IconButton>

@@ -72,6 +72,7 @@ const ProfileForm = () => {
           handleImageChange={handleImageChange}
         />
             <TextField
+              margin="normal"
               className={styles.input}
               label="First Name"
               name="firstName"
@@ -79,6 +80,7 @@ const ProfileForm = () => {
               onChange={handleInputChange}
             />
             <TextField
+              margin="normal"
               className={styles.input}
               label="Last Nassme"
               name="lastName"
@@ -86,6 +88,7 @@ const ProfileForm = () => {
               onChange={handleInputChange}
             />
             <TextField
+              margin="normal"
               className={styles.input}
               label="Address"
               name="address"

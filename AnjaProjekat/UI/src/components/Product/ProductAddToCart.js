@@ -1,8 +1,9 @@
 import React from 'react';
-import { Card, CardMedia, CardContent, Typography, Grid, Divider, Box } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Grid, Divider, Box, IconButton } from '@mui/material';
 import styles from './ProductAddToCart.module.css';
 import { useDispatch } from 'react-redux';
 import { addToCart } from 'slices/cartSlice';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 const ProductAddToCart = (product) => {
 
@@ -13,8 +14,13 @@ const ProductAddToCart = (product) => {
         dispatch(addToCart(product.item))
       };
 
-  return (
-    <button onClick={handleAddToCart} className={styles.button}>Add to cart</button>
+  return (<>
+    <IconButton edge="start" color="inherit" onClick={handleAddToCart} >
+      <AddShoppingCartIcon sx={{
+      paddingLeft: "40px"
+    }}/>
+    </IconButton>
+  </>
      );
 };
 

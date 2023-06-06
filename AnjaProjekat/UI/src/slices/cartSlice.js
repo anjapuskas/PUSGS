@@ -35,10 +35,24 @@ const initialState = {
             localStorage.setItem("amount", state.amount.toString())
             localStorage.setItem("price", state.price.toString())
           },
+          amountChange: (state, action) => {
+            const item = state.products.find((item) => item.id == action.payload.id)
+            if(item) {
+                item.amount = item.amount + action.payload.increment;
+                state.price=state.price + item.price*action.payload.increment;
+                state.amount = state.amount + action.payload.increment;
+                if(state.amount == 0) {
+                  state.products = state.products.filter(i => i.id !== action.payload.id);
+                }
+            } 
+            localStorage.setItem("products", JSON.stringify(state.products));
+            localStorage.setItem("amount", state.amount.toString())
+            localStorage.setItem("price", state.price.toString())
+          },
     }
     
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, amountChange } = cartSlice.actions;
 
 export default cartSlice.reducer;

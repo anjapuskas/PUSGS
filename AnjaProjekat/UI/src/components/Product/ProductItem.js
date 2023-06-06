@@ -8,6 +8,9 @@ const ProductItem = (product) => {
     <Box
     sx={{
       width: 400,
+      paddingLeft: "30px",
+      paddingRight: "100px",
+      paddingBottom: "40px"
     }}
   >
 <Card className={styles.container}>
