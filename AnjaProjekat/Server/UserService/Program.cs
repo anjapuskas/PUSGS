@@ -63,6 +63,7 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddScoped<IUserService, UserServiceImpl>();
 builder.Services.AddScoped<IProductService, ProductServiceImpl>();
+builder.Services.AddScoped<IOrderService, OrderServiceImpl>();
 
 var app = builder.Build();
 

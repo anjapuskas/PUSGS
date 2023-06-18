@@ -8,6 +8,7 @@ import Navigation from 'components/Navigation/Navigation';
 import { amountChange } from 'slices/cartSlice';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { addOrderAction } from 'slices/orderSlice';
 
 const CartForm = () => {
     const dispatch = useDispatch();
@@ -16,6 +17,7 @@ const CartForm = () => {
     const products = useSelector((state) => state.cart.products);
     const amount = useSelector((state) => state.cart.amount);
     const price = useSelector((state) => state.cart.price);
+    const id = useSelector((state) => state.user.user.id);
 
     const handleCommentChange = (event) => {
         setComment(event.target.value);
@@ -42,11 +44,12 @@ const CartForm = () => {
           address: address,
           comment: comment,
           amount: amount,
-          price: price
+          price: price,
+          userId: id
         };
     
         // @ts-ignore
-        //dispatch(orderAction(order));
+        dispatch(addOrderAction(order));
     
       };
 
@@ -139,7 +142,7 @@ const CartForm = () => {
                         value={address}
                         onChange={handleAddressChange}
                     />
-                    <Button variant="contained" color="primary" className={styles.button} fullWidth>
+                    <Button variant="contained" type="submit" color="primary" className={styles.button} fullWidth>
                         Proceed to Checkout
                     </Button>
                     </Card>

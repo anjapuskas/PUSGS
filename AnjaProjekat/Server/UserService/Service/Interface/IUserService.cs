@@ -1,4 +1,5 @@
 ﻿using UserService.DTO;
+using UserService.Model;
 
 namespace UserService.Service.Interface
 {
@@ -10,5 +11,6 @@ namespace UserService.Service.Interface
 
         Task<Boolean> updateProfile(ProfileDTO profileDTO);
         Task<ProfileImageDTO> getProfileImage(long id);
+        User getUser(long id);
     }
 }

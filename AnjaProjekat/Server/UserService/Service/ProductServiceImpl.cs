@@ -40,5 +40,10 @@ namespace UserService.Service
 
             return productDTOs;
         }
+
+        public Product getProduct(long id)
+        {
+            return _dbContext.Product.Find(id);
+        }
     }
 }

@@ -128,5 +128,10 @@ namespace UserService.Service
             profileImageDTO.File = fileStream; ;
             return profileImageDTO;
         }
+
+        public User getUser(long id)
+        {
+            return _dbContext.Users.Find(id);
+        }
     }
 }

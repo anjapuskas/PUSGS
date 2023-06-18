@@ -1,4 +1,5 @@
 ﻿using UserService.DTO;
+using UserService.Model;
 
 namespace UserService.Service.Interface
 {
@@ -7,6 +8,8 @@ namespace UserService.Service.Interface
         Task<Boolean> addProduct(ProductDTO addProductDTO);
 
         Task<List<ProductDTO>> getAllProducts();
+
+        Product getProduct(long id);
 
     }
 }

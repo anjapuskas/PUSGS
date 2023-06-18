@@ -13,6 +13,7 @@ namespace UserService.Mapper
             CreateMap<ProfileDTO, User>().ReverseMap();
             CreateMap<ProductDTO, Product>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<Order, CreateOrderDTO>().ReverseMap();
         }
     }
 }
