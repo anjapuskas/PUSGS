@@ -4,6 +4,7 @@ import AddProductPage from "pages/AddProductPage";
 import CartPage from "pages/CartPage";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
+import OrdersListPage from "pages/OrdersListPage";
 import ProductListPage from "pages/ProductListPage";
 import ProfilePage from "pages/ProfilePage";
 import RegistrationPage from "pages/RegistrationPage";
@@ -45,6 +46,9 @@ const AppRoutes = () => {
                 )}
                 {isBuyer && (
                   <Route path="/products" element={<ProductListPage />} />
+                )}
+                {isBuyer && (
+                  <Route path="/orders" element={<OrdersListPage />} />
                 )}
                 {isBuyer && (
                   <Route path="/cart" element={<CartPage />} />

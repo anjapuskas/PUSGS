@@ -16,19 +16,20 @@ namespace UserService.Service
     {
 
         private readonly IMapper _mapper;
-        private readonly EShopDbContext _dbContext;
+        private readonly IRepository _repository;
         private readonly IConfiguration _configuration;
 
-        public UserServiceImpl(IMapper mapper, EShopDbContext dbContext, IConfiguration configuration)
+        public UserServiceImpl(IMapper mapper, IRepository repository, IConfiguration configuration)
         {
             _mapper = mapper;
-            _dbContext = dbContext;
+            _repository = repository;
             _configuration = configuration; 
         }
 
         public async Task<LoginResultDTO> login(LoginAttemptDTO login)
         {
-            User user = _dbContext.Users.FirstOrDefault(u => u.Username == login.Username);
+            var users = await _repository._userRepository.GetAll();
+            User? user = users.FirstOrDefault(u => u.Username == login.Username);
 
 
             if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
@@ -67,8 +68,8 @@ namespace UserService.Service
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
-            _dbContext.Users.Add(user);
-            _dbContext.SaveChanges();
+            _repository._userRepository.Insert(user);
+            _repository.SaveChanges();
 
             return true;
 
@@ -76,14 +77,14 @@ namespace UserService.Service
 
         public async Task<bool> updateProfile(ProfileDTO profileDTO)
         {
-            User user = _dbContext.Users.FirstOrDefault(u => u.Id == profileDTO.Id);
+            User user = await _repository._userRepository.Get(profileDTO.Id);
             user.FirstName = profileDTO.FirstName;
             user.LastName = profileDTO.LastName;
             user.Address = profileDTO.Address;
             user.DateOfBirth = profileDTO.DateOfBirth;
             //user.Image= resolveImage(user.Image, profileDTO.Image, user.Username);
-            _dbContext.Users.Update(user);
-            _dbContext.SaveChanges();
+            _repository._userRepository.Update(user);
+            _repository.SaveChanges();
             return true;
         }
 
@@ -114,7 +115,7 @@ namespace UserService.Service
 
         public async Task<ProfileImageDTO> getProfileImage(long id)
         {
-            User user = _dbContext.Users.Find(id);
+            User user = await _repository._userRepository.Get(id);
             FileStream fileStream = null;
             if (File.Exists(user.Image))
             {
@@ -129,9 +130,9 @@ namespace UserService.Service
             return profileImageDTO;
         }
 
-        public User getUser(long id)
+        public async Task<User> getUser(long id)
         {
-            return _dbContext.Users.Find(id);
+            return  await  _repository._userRepository.Get(id);
         }
     }
 }

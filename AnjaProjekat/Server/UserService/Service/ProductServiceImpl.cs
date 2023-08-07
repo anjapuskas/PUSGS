@@ -10,12 +10,12 @@ namespace UserService.Service
     {
 
         private readonly IMapper _mapper;
-        private readonly EShopDbContext _dbContext;
+        private readonly IRepository _repository;
 
-        public ProductServiceImpl(IMapper mapper, EShopDbContext dbContext)
+        public ProductServiceImpl(IMapper mapper, IRepository repository)
         {
             _mapper = mapper;
-            _dbContext = dbContext;
+            _repository = repository;
         }
 
         public async Task<bool> addProduct(ProductDTO addProductDTO)
@@ -23,15 +23,16 @@ namespace UserService.Service
             Product product = _mapper.Map<Product>(addProductDTO);
             product.Image = "";
 
-            _dbContext.Product.Add(product);
-            _dbContext.SaveChanges();
+            _repository._productRepository.Insert(product);
+            _repository.SaveChanges();
 
            return true;
         }
 
         public async Task<List<ProductDTO>> getAllProducts()
         {
-            List<Product> products = _dbContext.Product.ToList();
+            var products = await _repository._productRepository.GetAll();
+            List<Product> sellerProducts = products.ToList();
             List<ProductDTO> productDTOs = new List<ProductDTO>();
             foreach (Product product in products)
             {
@@ -41,9 +42,9 @@ namespace UserService.Service
             return productDTOs;
         }
 
-        public Product getProduct(long id)
+        public Task<Product> getProduct(long id)
         {
-            return _dbContext.Product.Find(id);
+            return _repository._productRepository.Get(id);
         }
     }
 }

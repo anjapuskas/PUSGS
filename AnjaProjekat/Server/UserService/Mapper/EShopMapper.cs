@@ -14,6 +14,7 @@ namespace UserService.Mapper
             CreateMap<ProductDTO, Product>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
             CreateMap<Order, CreateOrderDTO>().ReverseMap();
+            CreateMap<OrderDTO, Order>().ReverseMap();
         }
     }
 }

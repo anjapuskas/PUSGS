@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, ListItemIcon, Divider, Typography } from '@mui/material';
-import { AccountCircle, Logout, AddBox } from '@mui/icons-material';
+import { AccountCircle, Logout, AddBox, ViewList } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { logout } from 'slices/userSlice';
 import styles from './Navigation.module.css';
@@ -44,6 +44,10 @@ const Navigation = () => {
     navigate('/products');
   };
 
+  const handleOrdersClick = () => {
+    navigate('/orders');
+  };
+
   const handleCartClick = () => {
     navigate('/cart');
   };
@@ -81,6 +85,16 @@ const Navigation = () => {
                 <InventoryIcon />
                 <Typography variant="body1" component="span">
                   Products
+                </Typography>
+              </IconButton>
+            </div>
+          )}
+          {isBuyer && (
+            <div>
+              <IconButton edge="start" color="inherit" onClick={handleOrdersClick}>
+                <ViewList />
+                <Typography variant="body1" component="span">
+                  Orders
                 </Typography>
               </IconButton>
             </div>

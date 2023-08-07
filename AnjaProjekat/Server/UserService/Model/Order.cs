@@ -1,8 +1,7 @@
 ﻿namespace UserService.Model
 {
-    public class Order
+    public class Order : EntityBase
     {
-        public long Id { get; set; }
         public double Price { get; set; }  
         public string Comment { get; set; } 
         public string Address { get; set; }

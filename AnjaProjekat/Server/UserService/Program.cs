@@ -7,6 +7,7 @@ using UserService.Service.Interface;
 using UserService.Service;
 using AutoMapper;
 using UserService.Mapper;
+using UserService.Repository;
 
 string _cors = "cors";
 var builder = WebApplication.CreateBuilder(args);
@@ -64,6 +65,9 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<IUserService, UserServiceImpl>();
 builder.Services.AddScoped<IProductService, ProductServiceImpl>();
 builder.Services.AddScoped<IOrderService, OrderServiceImpl>();
+builder.Services.AddScoped<DbContext, EShopDbContext>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IRepository, Repository>();
 
 var app = builder.Build();
 

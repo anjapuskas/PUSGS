@@ -10,14 +10,14 @@ namespace UserService.Service
     {
 
         private readonly IMapper _mapper;
-        private readonly EShopDbContext _dbContext;
+        private readonly IRepository _repository;
         private readonly IProductService _productService;
         private readonly IUserService _userService;
 
-        public OrderServiceImpl(IMapper mapper, EShopDbContext dbContext, IProductService productService, IUserService userService)
+        public OrderServiceImpl(IMapper mapper, IRepository repository, IProductService productService, IUserService userService)
         {
             _mapper = mapper;
-            _dbContext = dbContext;
+            _repository = repository;
             _productService = productService;
             _userService = userService;
         }
@@ -25,9 +25,9 @@ namespace UserService.Service
         public async Task<bool> addOrder(CreateOrderDTO createOrderDTO)
         {
             Order order = _mapper.Map<Order>(createOrderDTO);
-            order.Buyer = _userService.getUser(order.UserId);
-            _dbContext.Order.Add(order);
-            _dbContext.SaveChanges();
+            order.Buyer = await _userService.getUser(order.UserId);
+            _repository._orderRepository.Insert(order);
+            _repository.SaveChanges();
 
             foreach (ProductDTO product in createOrderDTO.Products)
             {
@@ -35,13 +35,38 @@ namespace UserService.Service
                 orderProduct.ProductId = product.Id;
                 orderProduct.OrderId = order.Id;
                 orderProduct.Order = order;
-                orderProduct.Product = _productService.getProduct(product.Id);
+                orderProduct.Product = await _productService.getProduct(product.Id);
                 orderProduct.Price = product.Price;
                 orderProduct.Amount = product.Amount;
-                _dbContext.OrderProduct.Add(orderProduct);
-                _dbContext.SaveChanges();
+                _repository._orderProductRepository.Insert(orderProduct);
+                _repository.SaveChanges();
             }
 
+            return true;
+        }
+
+        public async Task<List<OrderDTO>> getAllOrders(long id)
+        {
+            var orders = await _repository._orderRepository.GetAll();
+            List<Order> ordersList = orders.Where(o => o.UserId == id).ToList();
+            List<OrderDTO> orderDTOs = new List<OrderDTO>();
+            foreach (Order order in ordersList)
+            {
+                OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
+                orderDTO.OrderStatus = Enum.GetName(typeof(OrderStatus), order.OrderStatus);
+                orderDTO.Created = order.Created.ToString("yyyy.MM.dd HH:mm:ss");
+                orderDTOs.Add(orderDTO);
+            }
+
+            return orderDTOs;
+        }
+
+        public async Task<bool> cancelOrder(long id)
+        {
+            Order order = await _repository._orderRepository.Get(id);
+            order.OrderStatus = OrderStatus.CANCELLED;
+            _repository._orderRepository.Update(order);
+            _repository.SaveChanges();
             return true;
         }
     }

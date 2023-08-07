@@ -9,7 +9,7 @@ namespace UserService.Service.Interface
 
         Task<List<ProductDTO>> getAllProducts();
 
-        Product getProduct(long id);
+        Task<Product> getProduct(long id);
 
     }
 }

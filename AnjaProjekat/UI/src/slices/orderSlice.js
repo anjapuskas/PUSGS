@@ -1,11 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { useNavigate } from "react-router-dom";
-import { AddOrder } from "services/OrderService";
-import { AddProduct, GetAllProducts } from "services/ProductService";
-import { Home, Login, Profile, ProfileImage, Register } from "services/UserService";
+import { AddOrder, CancelOrder, GetAllOrders } from "services/OrderService";
+
 
 const initialState = {
-  products : []
+  orders : []
 };
   
   export const addOrderAction = createAsyncThunk(
@@ -20,6 +18,31 @@ const initialState = {
     }
   );
 
+  export const getAllOrdersAction = createAsyncThunk(
+    "orders",
+    async (data, thunkApi) => {
+      try {
+        const response = await GetAllOrders(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
+
+  export const cancelOrder = createAsyncThunk(
+    "orders/cancel",
+    async (data, thunkApi) => {
+      try {
+        const response = await CancelOrder(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
   const orderSlice = createSlice({
     name: "order",
     initialState,
@@ -27,6 +50,11 @@ const initialState = {
     },
     extraReducers: (builder) => {
         builder.addCase(addOrderAction.fulfilled, (state, action) => {
+        });
+        builder.addCase(getAllOrdersAction.fulfilled, (state, action) => {
+          state.orders = action.payload;
+        });
+        builder.addCase(cancelOrder.fulfilled, (state, action) => {
         });
     }
     

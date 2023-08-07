@@ -11,6 +11,6 @@ namespace UserService.Service.Interface
 
         Task<Boolean> updateProfile(ProfileDTO profileDTO);
         Task<ProfileImageDTO> getProfileImage(long id);
-        User getUser(long id);
+        Task<User> getUser(long id);
     }
 }
