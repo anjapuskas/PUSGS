@@ -26,8 +26,9 @@ namespace UserService.Service
         {
             Order order = _mapper.Map<Order>(createOrderDTO);
             order.Buyer = await _userService.getUser(order.UserId);
-            _repository._orderRepository.Insert(order);
-            _repository.SaveChanges();
+            order.Created = DateTime.Now;
+            order.DeliveryTime = DateTime.Now.AddHours(1).AddHours(new Random().Next(24));
+            order.OrderProducts = new List<OrderProduct>();
 
             foreach (ProductDTO product in createOrderDTO.Products)
             {
@@ -38,9 +39,13 @@ namespace UserService.Service
                 orderProduct.Product = await _productService.getProduct(product.Id);
                 orderProduct.Price = product.Price;
                 orderProduct.Amount = product.Amount;
-                _repository._orderProductRepository.Insert(orderProduct);
-                _repository.SaveChanges();
+                order.OrderProducts.Add(orderProduct);
             }
+
+            await _repository._orderRepository.Insert(order);
+            await _repository.SaveChanges();
+
+
 
             return true;
         }
