@@ -8,6 +8,7 @@ namespace UserService.DTO
         public double Price { get; set; }
         public string Address { get; set; }
         public string Created { get; set; }
+        public string DeliveryTime { get; set; }
         public string OrderStatus { get; set; }
     }
 }

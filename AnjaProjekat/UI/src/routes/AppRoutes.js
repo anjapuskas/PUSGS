@@ -1,9 +1,11 @@
 import HomeForm from "components/Home/HomeForm";
 import RegistrationForm from "components/Registration/RegistrationForm";
 import AddProductPage from "pages/AddProductPage";
+import AdminOrdersListPage from "pages/AdminOrdersListPage";
 import CartPage from "pages/CartPage";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
+import NewOrdersListPage from "pages/NewOrdersListPage";
 import OrdersListPage from "pages/OrdersListPage";
 import ProductListPage from "pages/ProductListPage";
 import ProfilePage from "pages/ProfilePage";
@@ -44,13 +46,19 @@ const AppRoutes = () => {
                 {isSeller && (
                   <Route path="/add-product" element={<AddProductPage />} />
                 )}
-                {isBuyer && (
+                {(isBuyer || isSeller) && (
                   <Route path="/products" element={<ProductListPage />} />
                 )}
-                {isBuyer && (
+                {(isBuyer || isSeller) && (
                   <Route path="/orders" element={<OrdersListPage />} />
                 )}
-                {isBuyer && (
+                {isSeller && (
+                  <Route path="/new-orders" element={<NewOrdersListPage />} />
+                )}
+                {isAdmin && (
+                  <Route path="/admin-orders" element={<AdminOrdersListPage />} />
+                )}
+                {(isBuyer || isSeller) && (
                   <Route path="/cart" element={<CartPage />} />
                 )}
                 

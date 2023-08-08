@@ -8,6 +8,10 @@ namespace UserService.Service.Interface
 
         Task<List<OrderDTO>> getAllOrders(long id);
 
+        Task<List<OrderDTO>> getNewOrders();
+
+        Task<List<OrderDTO>> getAdminOrders();
+
         Task<Boolean> cancelOrder(long id);
     }
 }

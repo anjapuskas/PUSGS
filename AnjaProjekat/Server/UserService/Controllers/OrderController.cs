@@ -19,7 +19,7 @@ namespace UserService.Configuration
         }
 
         [HttpPost("add")]
-        [Authorize(Roles = "BUYER")]
+        [Authorize(Roles = "BUYER,SELLER")]
         public async Task<IActionResult> addOrder([FromBody] CreateOrderDTO createOrderDTO)
         {
             Boolean addOrderResult = await _orderService.addOrder(createOrderDTO);
@@ -27,15 +27,31 @@ namespace UserService.Configuration
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(Roles = "BUYER,SELLER")]
         public async Task<IActionResult> getAllOrders(long id)
         {
             List<OrderDTO> orders = await _orderService.getAllOrders(id);
             return Ok(orders);
         }
 
+        [HttpGet("new")]
+        [Authorize(Roles = "SELLER")]
+        public async Task<IActionResult> getNewOrders()
+        {
+            List<OrderDTO> orders = await _orderService.getNewOrders();
+            return Ok(orders);
+        }
+
+        [HttpGet("admin")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> getAdminOrders()
+        {
+            List<OrderDTO> orders = await _orderService.getAdminOrders();
+            return Ok(orders);
+        }
+
         [HttpPost("cancel/{id}")]
-        [Authorize]
+        [Authorize(Roles = "BUYER,SELLER")]
         public async Task<IActionResult> cancelOrder(long id)
         {
             await _orderService.cancelOrder(id);

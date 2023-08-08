@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, ListItemIcon, Divider, Typography } from '@mui/material';
-import { AccountCircle, Logout, AddBox, ViewList } from '@mui/icons-material';
+import { AccountCircle, Logout, AddBox, ViewList, ViewStream } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { logout } from 'slices/userSlice';
 import styles from './Navigation.module.css';
@@ -18,6 +18,7 @@ const Navigation = () => {
   
   const isSeller = userRole === 'SELLER';
   const isBuyer = userRole === 'BUYER';
+  const isAdmin = userRole === 'ADMIN';
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -46,6 +47,14 @@ const Navigation = () => {
 
   const handleOrdersClick = () => {
     navigate('/orders');
+  };
+
+  const handleNewOrdersClick = () => {
+    navigate('/new-orders');
+  };
+
+  const handleAdminOrdersClick = () => {
+    navigate('/admin-orders');
   };
 
   const handleCartClick = () => {
@@ -79,7 +88,7 @@ const Navigation = () => {
               </IconButton>
             </div>
           )}
-          {isBuyer && (
+          {(isBuyer || isSeller) && (
             <div>
               <IconButton edge="start" color="inherit" onClick={handleProductsClick}>
                 <InventoryIcon />
@@ -89,22 +98,42 @@ const Navigation = () => {
               </IconButton>
             </div>
           )}
-          {isBuyer && (
+          {(isBuyer || isSeller) && (
             <div>
               <IconButton edge="start" color="inherit" onClick={handleOrdersClick}>
                 <ViewList />
                 <Typography variant="body1" component="span">
-                  Orders
+                  Personal Orders
+                </Typography>
+              </IconButton>
+            </div>
+          )}
+          {isSeller && (
+            <div>
+              <IconButton edge="start" color="inherit" onClick={handleNewOrdersClick}>
+                <ViewStream />
+                <Typography variant="body1" component="span">
+                  New Orders
                 </Typography>
               </IconButton>
             </div>
           )}
           <div style={{ flexGrow: 1 }} />
-          {isBuyer && (
+          {(isBuyer || isSeller) && (
             <div>
               <IconButton edge="start" color="inherit" onClick={handleCartClick}>
                 <ShoppingCartIcon />
                 {numberOfItemsInCart > 0 && <span className={styles.cartItemCount}>{numberOfItemsInCart}</span>}
+              </IconButton>
+            </div>
+          )}
+          {isAdmin && (
+            <div>
+              <IconButton edge="start" color="inherit" onClick={handleAdminOrdersClick}>
+                <ViewStream />
+                <Typography variant="body1" component="span">
+                  All Orders
+                </Typography>
               </IconButton>
             </div>
           )}

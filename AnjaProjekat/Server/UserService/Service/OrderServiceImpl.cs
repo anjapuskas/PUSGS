@@ -53,13 +53,48 @@ namespace UserService.Service
         public async Task<List<OrderDTO>> getAllOrders(long id)
         {
             var orders = await _repository._orderRepository.GetAll();
-            List<Order> ordersList = orders.Where(o => o.UserId == id).ToList();
+            List<Order> ordersList = orders.Where(o => o.UserId == id && o.OrderStatus != OrderStatus.CANCELLED).ToList();
             List<OrderDTO> orderDTOs = new List<OrderDTO>();
             foreach (Order order in ordersList)
             {
                 OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
                 orderDTO.OrderStatus = Enum.GetName(typeof(OrderStatus), order.OrderStatus);
                 orderDTO.Created = order.Created.ToString("yyyy.MM.dd HH:mm:ss");
+                orderDTO.DeliveryTime = order.DeliveryTime.ToString("yyyy.MM.dd HH:mm:ss");
+                orderDTOs.Add(orderDTO);
+            }
+
+            return orderDTOs;
+        }
+
+        public async Task<List<OrderDTO>> getNewOrders()
+        {
+            var orders = await _repository._orderRepository.GetAll();
+            List<Order> ordersList = orders.Where(o => o.OrderStatus == OrderStatus.ORDERED).ToList();
+            List<OrderDTO> orderDTOs = new List<OrderDTO>();
+            foreach (Order order in ordersList)
+            {
+                OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
+                orderDTO.OrderStatus = Enum.GetName(typeof(OrderStatus), order.OrderStatus);
+                orderDTO.Created = order.Created.ToString("yyyy.MM.dd HH:mm:ss");
+                orderDTO.DeliveryTime = order.DeliveryTime.ToString("yyyy.MM.dd HH:mm:ss");
+                orderDTOs.Add(orderDTO);
+            }
+
+            return orderDTOs;
+        }
+
+        public async Task<List<OrderDTO>> getAdminOrders()
+        {
+            var orders = await _repository._orderRepository.GetAll();
+            List<Order> ordersList = orders.ToList();
+            List<OrderDTO> orderDTOs = new List<OrderDTO>();
+            foreach (Order order in ordersList)
+            {
+                OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
+                orderDTO.OrderStatus = Enum.GetName(typeof(OrderStatus), order.OrderStatus);
+                orderDTO.Created = order.Created.ToString("yyyy.MM.dd HH:mm:ss");
+                orderDTO.DeliveryTime = order.DeliveryTime.ToString("yyyy.MM.dd HH:mm:ss");
                 orderDTOs.Add(orderDTO);
             }
 

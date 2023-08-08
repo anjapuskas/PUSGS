@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { AddOrder, CancelOrder, GetAllOrders } from "services/OrderService";
+import { AddOrder, CancelOrder, GetAdminOrders, GetAllOrders, GetNewOrders } from "services/OrderService";
 
 
 const initialState = {
@@ -19,10 +19,34 @@ const initialState = {
   );
 
   export const getAllOrdersAction = createAsyncThunk(
-    "orders",
+    "orders/all",
     async (data, thunkApi) => {
       try {
         const response = await GetAllOrders(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
+  export const getNewOrdersAction = createAsyncThunk(
+    "orders/new",
+    async (data, thunkApi) => {
+      try {
+        const response = await GetNewOrders();
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
+  export const getAdminOrdersAction = createAsyncThunk(
+    "orders/admin",
+    async (data, thunkApi) => {
+      try {
+        const response = await GetAdminOrders();
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
         return thunkApi.rejectWithValue(error.response.error);
@@ -55,6 +79,12 @@ const initialState = {
           state.orders = action.payload;
         });
         builder.addCase(cancelOrder.fulfilled, (state, action) => {
+        });
+        builder.addCase(getNewOrdersAction.fulfilled, (state, action) => {
+          state.orders = action.payload;
+        });
+        builder.addCase(getAdminOrdersAction.fulfilled, (state, action) => {
+          state.orders = action.payload;
         });
     }
     

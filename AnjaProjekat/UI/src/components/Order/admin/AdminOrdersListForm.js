@@ -1,12 +1,12 @@
-import styles from './OrdersListForm.module.css';
+import styles from './AdminOrdersListForm.module.css';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Container, CssBaseline, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 
 import Navigation from 'components/Navigation/Navigation';
-import { cancelOrder, getAllOrdersAction } from 'slices/orderSlice';
+import { cancelOrder, getAdminOrdersAction } from 'slices/orderSlice';
 
-const OrdersListForm = () => {
+const AdminOrdersListForm = () => {
   const dispatch = useDispatch();
   // @ts-ignore
   const user = useSelector((state) => state.user.user);
@@ -17,15 +17,8 @@ const OrdersListForm = () => {
   useEffect(() => {
 
     // @ts-ignore
-    dispatch(getAllOrdersAction(user.id));
+    dispatch(getAdminOrdersAction());
   }, []);
-
-  const handleCancelOrder = (event) => {
-    // @ts-ignore
-    dispatch(cancelOrder(user.id));
-    // @ts-ignore
-    dispatch(getAllOrdersAction(user.id));
-  };
 
   return (
     <>
@@ -38,9 +31,8 @@ const OrdersListForm = () => {
             <TableCell>Address</TableCell>
             <TableCell>Created Date</TableCell>
             <TableCell>Delivery Date</TableCell>
-            <TableCell>Order Status</TableCell>
+            <TableCell>Status</TableCell>
             <TableCell>Price</TableCell>
-            <TableCell>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -51,11 +43,6 @@ const OrdersListForm = () => {
               <TableCell>{order.deliveryTime}</TableCell>
               <TableCell>{order.orderStatus}</TableCell>
               <TableCell>{order.price}</TableCell>
-              <TableCell>
-                <Button variant="outlined" color="secondary" onClick={() => handleCancelOrder(order.id)}>
-                  Cancel
-                </Button>
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -66,4 +53,4 @@ const OrdersListForm = () => {
   );
 };
 
-export default OrdersListForm;
+export default AdminOrdersListForm;
