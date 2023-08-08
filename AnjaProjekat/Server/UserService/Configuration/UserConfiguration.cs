@@ -26,6 +26,7 @@ namespace UserService.Configuration
             builder.Property(user => user.Address).IsRequired(false);
             builder.Property(user => user.Image).IsRequired(false);
             builder.Property(user => user.UserRole).HasConversion(new EnumToStringConverter<UserRole>());
+            builder.Property(user => user.UserStatus).HasConversion(new EnumToStringConverter<UserStatus>());
         }
     }
 }

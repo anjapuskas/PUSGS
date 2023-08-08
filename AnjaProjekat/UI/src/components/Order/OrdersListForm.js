@@ -20,11 +20,11 @@ const OrdersListForm = () => {
     dispatch(getAllOrdersAction(user.id));
   }, []);
 
-  const handleCancelOrder = (event) => {
+  const handleCancelOrder = (event, id) => {
     // @ts-ignore
-    dispatch(cancelOrder(user.id));
+    dispatch(cancelOrder(id));
     // @ts-ignore
-    dispatch(getAllOrdersAction(user.id));
+    dispatch(getAllOrdersAction(id));
   };
 
   return (

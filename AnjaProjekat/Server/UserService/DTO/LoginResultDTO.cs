@@ -9,6 +9,7 @@
         public DateTime DateOfBirth { get; set; }
         public string Image { get; set; }
         public string UserRole { get; set; }
+        public string UserStatus { get; set; }
         public string Token { get; set; }
     }
 }

@@ -21,6 +21,7 @@ const ProfileForm = () => {
     const [isDateValid, setIsDateValid] = useState(false);
     const [isDateTouched, setIsDateTouched] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const isSeller = user.userRole === 'SELLER';
 
     useEffect(() => {
         if (user.dateOfBirth) {
@@ -82,7 +83,7 @@ const ProfileForm = () => {
             <TextField
               margin="normal"
               className={styles.input}
-              label="Last Nassme"
+              label="Last Name"
               name="lastName"
               defaultValue={user.lastName}
               onChange={handleInputChange}
@@ -95,16 +96,25 @@ const ProfileForm = () => {
               defaultValue={user.address}
               onChange={handleInputChange}
             />
-              <DesktopDatePicker
-                  format="dd/MM/yyyy"
-                  // @ts-ignore
-                  fullWidth
-                  disableFuture
-                  label="Birthday"
-                  error={isDateTouched && !isDateValid}
-                  onChange={(value) => dateChangeHandler(new Date(value))}
-                  value = {date}
-                />
+            <TextField
+              disabled
+              margin="normal"
+              className={styles.input}
+              label="Status"
+              name="status"
+              defaultValue={user.userStatus}
+              onChange={handleInputChange}
+            />
+            <DesktopDatePicker
+                format="dd/MM/yyyy"
+                // @ts-ignore
+                fullWidth
+                disableFuture
+                label="Birthday"
+                error={isDateTouched && !isDateValid}
+                onChange={(value) => dateChangeHandler(new Date(value))}
+                value = {date}
+              />
             <Button
               type="submit"
               variant="contained"

@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, ListItemIcon, Divider, Typography } from '@mui/material';
-import { AccountCircle, Logout, AddBox, ViewList, ViewStream } from '@mui/icons-material';
+import { AccountCircle, Logout, AddBox, ViewList, ViewStream, People } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { logout } from 'slices/userSlice';
 import styles from './Navigation.module.css';
@@ -55,6 +55,10 @@ const Navigation = () => {
 
   const handleAdminOrdersClick = () => {
     navigate('/admin-orders');
+  };
+
+  const handleVerificationClick = () => {
+    navigate('/verify-users');
   };
 
   const handleCartClick = () => {
@@ -133,6 +137,16 @@ const Navigation = () => {
                 <ViewStream />
                 <Typography variant="body1" component="span">
                   All Orders
+                </Typography>
+              </IconButton>
+            </div>
+          )}
+          {isAdmin && (
+            <div>
+              <IconButton edge="start" color="inherit" onClick={handleVerificationClick}>
+                <People />
+                <Typography variant="body1" component="span">
+                  Verify Users
                 </Typography>
               </IconButton>
             </div>

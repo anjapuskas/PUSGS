@@ -106,7 +106,7 @@ namespace UserService.Service
             Order order = await _repository._orderRepository.Get(id);
             order.OrderStatus = OrderStatus.CANCELLED;
             _repository._orderRepository.Update(order);
-            _repository.SaveChanges();
+            await _repository.SaveChanges();
             return true;
         }
     }

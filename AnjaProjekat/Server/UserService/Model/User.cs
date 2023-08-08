@@ -10,6 +10,7 @@
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
         public UserRole UserRole { get; set; }
+        public UserStatus UserStatus { get; set; }
         public string Image { get; set; }
     }
 }

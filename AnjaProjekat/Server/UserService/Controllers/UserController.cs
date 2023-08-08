@@ -53,5 +53,29 @@ namespace UserService.Controllers
             ProfileImageDTO file = await _userService.getProfileImage(id);
             return File(file.File, "application/octet-stream", file.Name);
         }
+
+        [HttpGet("verify")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> getSellersForVerification()
+        {
+            List<UserVerifyDTO> users = await _userService.getSellersForVerification();
+            return Ok(users);
+        }
+
+        [HttpPost("verify/{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> verifyOrder(long id)
+        {
+            await _userService.verifyUser(id);
+            return Ok();
+        }
+
+        [HttpPost("reject/{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> rejectOrder(long id)
+        {
+            await _userService.rejectUser(id);
+            return Ok();
+        }
     }
 }

@@ -64,3 +64,30 @@ export const ProfileImage = async (id) => {
      throw new Error(error.response.data.error);
     }
 };
+
+export const GetSellersForVerification = async () => {
+    try {
+        const response = await axiosInstance.get(`${process.env.REACT_APP_BACKEND_APPLICATION_ENDPOINT}/users/verify`);
+        return response.data;
+    } catch (error) {
+     throw new Error(error.response.data.error);
+    }
+};
+
+export const VerifyUser = async (id) => {
+    try {
+        const response = await axiosInstance.post(`${process.env.REACT_APP_BACKEND_APPLICATION_ENDPOINT}/users/verify/${id}`);
+        return response.data;
+    } catch (error) {
+     throw new Error(error.response.data.error);
+    }
+};
+
+export const RejectUser = async (id) => {
+    try {
+        const response = await axiosInstance.post(`${process.env.REACT_APP_BACKEND_APPLICATION_ENDPOINT}/users/reject/${id}`);
+        return response.data;
+    } catch (error) {
+     throw new Error(error.response.data.error);
+    }
+};

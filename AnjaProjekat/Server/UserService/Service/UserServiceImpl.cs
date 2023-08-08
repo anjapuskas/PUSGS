@@ -57,6 +57,7 @@ namespace UserService.Service
 
             LoginResultDTO loginResult = _mapper.Map<LoginResultDTO>(user);
             loginResult.Token = token;
+            loginResult.UserStatus = Enum.GetName(typeof(UserStatus), user.UserStatus);
 
             return loginResult;
 
@@ -68,8 +69,16 @@ namespace UserService.Service
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
-            _repository._userRepository.Insert(user);
-            _repository.SaveChanges();
+            if(user.UserRole == UserRole.SELLER)
+            {
+                user.UserStatus = UserStatus.ON_HOLD;
+            } else
+            {
+                user.UserStatus = UserStatus.VERIFIED;
+            }
+
+            await _repository._userRepository.Insert(user);
+            await _repository.SaveChanges();
 
             return true;
 
@@ -84,8 +93,25 @@ namespace UserService.Service
             user.DateOfBirth = profileDTO.DateOfBirth;
             //user.Image= resolveImage(user.Image, profileDTO.Image, user.Username);
             _repository._userRepository.Update(user);
-            _repository.SaveChanges();
+            await _repository.SaveChanges();
             return true;
+        }
+
+        public async Task<List<UserVerifyDTO>> getSellersForVerification()
+        {
+            var users = await _repository._userRepository.GetAll();
+            List<User> usersList = users.Where(u => u.UserRole == UserRole.SELLER).ToList();
+            List<UserVerifyDTO> userVerifyDTOs = new List<UserVerifyDTO>();
+            foreach (User user in usersList)
+            {
+                UserVerifyDTO userVerifyDTO = _mapper.Map<UserVerifyDTO>(user);
+                userVerifyDTO.UserStatus= Enum.GetName(typeof(UserStatus), user.UserStatus);
+                userVerifyDTO.DateOfBirth = user.DateOfBirth.ToString("yyyy.MM.dd HH:mm:ss");
+                userVerifyDTO.Name = user.FirstName + " " + user.LastName;
+                userVerifyDTOs.Add(userVerifyDTO);
+            }
+
+            return userVerifyDTOs;
         }
 
         private string resolveImage (string oldImage, IFormFile newImage, string username)
@@ -133,6 +159,24 @@ namespace UserService.Service
         public async Task<User> getUser(long id)
         {
             return  await  _repository._userRepository.Get(id);
+        }
+
+        public async Task<bool> verifyUser(long id)
+        {
+            User user = await _repository._userRepository.Get(id);
+            user.UserStatus = UserStatus.VERIFIED;
+            _repository._userRepository.Update(user);
+            await _repository.SaveChanges();
+            return true;
+        }
+
+        public async Task<bool> rejectUser(long id)
+        {
+            User user = await _repository._userRepository.Get(id);
+            user.UserStatus = UserStatus.REJECTED;
+            _repository._userRepository.Update(user);
+            await _repository.SaveChanges();
+            return true;
         }
     }
 }

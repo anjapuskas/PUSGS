@@ -23,8 +23,8 @@ namespace UserService.Service
             Product product = _mapper.Map<Product>(addProductDTO);
             product.Image = "";
 
-            _repository._productRepository.Insert(product);
-            _repository.SaveChanges();
+            await _repository._productRepository.Insert(product);
+            await _repository.SaveChanges();
 
            return true;
         }

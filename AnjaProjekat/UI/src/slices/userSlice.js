@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
-import { Home, Login, Profile, ProfileImage, Register } from "services/UserService";
+import { GetSellersForVerification, Home, Login, Profile, ProfileImage, Register, RejectUser, VerifyUser } from "services/UserService";
 
 const initialState = {
   token: localStorage.getItem("token"),
   loggedIn: localStorage.getItem("token") != null,
-  user: localStorage.getItem("user") != null ? JSON.parse(localStorage.getItem("user")) : null
+  user: localStorage.getItem("user") != null ? JSON.parse(localStorage.getItem("user")) : null,
+  sellers : []
 };
   
   export const loginAction = createAsyncThunk(
@@ -73,6 +74,42 @@ const initialState = {
     }
   );
 
+  export const getSellersForVerification = createAsyncThunk(
+    "user/verify-list",
+    async (data, thunkApi) => {
+      try {
+        const response = await GetSellersForVerification();
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
+  export const verifySeller = createAsyncThunk(
+    "orders/cancel",
+    async (data, thunkApi) => {
+      try {
+        const response = await VerifyUser(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
+  export const rejectSeller = createAsyncThunk(
+    "orders/cancel",
+    async (data, thunkApi) => {
+      try {
+        const response = await RejectUser(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
   const userSlice = createSlice({
     name: "user",
     initialState,
@@ -104,6 +141,11 @@ const initialState = {
         builder.addCase(profileImageAction.fulfilled, (state, action) => {
           const imageSrc = URL.createObjectURL(new Blob([action.payload]));
           state.user = { ...state.user, imageSrc: imageSrc };
+        });
+        builder.addCase(getSellersForVerification.fulfilled, (state, action) => {
+          state.sellers = action.payload;
+        });
+        builder.addCase(verifySeller.fulfilled, (state, action) => {
         });
     },
     

@@ -10,6 +10,7 @@ import OrdersListPage from "pages/OrdersListPage";
 import ProductListPage from "pages/ProductListPage";
 import ProfilePage from "pages/ProfilePage";
 import RegistrationPage from "pages/RegistrationPage";
+import VerificationListPage from "pages/VerificationListPage";
 import { useSelector } from "react-redux";
 
 const { default: LoginForm } = require("components/Login/LoginForm");
@@ -57,6 +58,9 @@ const AppRoutes = () => {
                 )}
                 {isAdmin && (
                   <Route path="/admin-orders" element={<AdminOrdersListPage />} />
+                )}
+                {isAdmin && (
+                  <Route path="/verify-users" element={<VerificationListPage />} />
                 )}
                 {(isBuyer || isSeller) && (
                   <Route path="/cart" element={<CartPage />} />
