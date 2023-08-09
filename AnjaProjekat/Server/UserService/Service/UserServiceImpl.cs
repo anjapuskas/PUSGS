@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Google.Apis.Auth;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -51,6 +52,68 @@ namespace UserService.Service
                 claims: claims, 
                 expires: DateTime.Now.AddMinutes(20), 
                 signingCredentials: signinCredentials 
+            );
+
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            LoginResultDTO loginResult = _mapper.Map<LoginResultDTO>(user);
+            loginResult.Token = token;
+            loginResult.UserStatus = Enum.GetName(typeof(UserStatus), user.UserStatus);
+
+            return loginResult;
+
+        }
+
+        public async Task<LoginResultDTO> googleLogin(GoogleLoginAttemptDTO login)
+        {
+
+            var validiran = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new List<string>() { "992296743500-b03369t6d0irjg28vf57ug80unsntiid.apps.googleusercontent.com" }
+            };
+
+            var googleInfo = await GoogleJsonWebSignature.ValidateAsync(login.Token, validiran);
+
+
+
+            var users = await _repository._userRepository.GetAll();
+            User? user = users.FirstOrDefault(u => u.Email == googleInfo.Email);
+
+            if (user == null)
+            {
+                User newUser = new User();
+                newUser.Email = googleInfo.Email;
+                newUser.FirstName = googleInfo.GivenName;
+                newUser.LastName = googleInfo.FamilyName;
+                newUser.Username = googleInfo.Email.Split("@")[0];
+                newUser.Address = "";
+                newUser.Password = BCrypt.Net.BCrypt.HashPassword(Guid.NewGuid().ToString("n").Substring(0, 8));
+                newUser.DateOfBirth = DateTime.MinValue;
+                newUser.UserRole = UserRole.BUYER;
+                newUser.UserStatus = UserStatus.VERIFIED;
+
+                await _repository._userRepository.Insert(newUser);
+                await _repository.SaveChanges();
+
+                user = newUser;
+            }
+
+
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.UserRole.ToString())
+            };
+
+            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("ApplicationSettings")["secret"]));
+
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var tokenOptions = new JwtSecurityToken(
+                issuer: "https://localhost:44350/",
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(20),
+                signingCredentials: signinCredentials
             );
 
             string token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);

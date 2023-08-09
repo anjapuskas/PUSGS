@@ -24,6 +24,13 @@ namespace UserService.Controllers
             return Ok(loginResult);
         }
 
+        [HttpPost("google/login")]
+        public async Task<IActionResult> googleLogin(GoogleLoginAttemptDTO loginDTO)
+        {
+            LoginResultDTO loginResult = await _userService.googleLogin(loginDTO);
+            return Ok(loginResult);
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> register([FromBody]RegisterDTO registerDTO)
         {

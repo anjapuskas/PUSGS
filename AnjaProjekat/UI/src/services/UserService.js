@@ -10,6 +10,16 @@ export const Login = async (request) => {
     }
 };
 
+export const GoogleLogin = async (request) => {
+    try {
+        const url = `${process.env.REACT_APP_BACKEND_APPLICATION_ENDPOINT}`
+        const response = await axiosInstance.post(`${process.env.REACT_APP_BACKEND_APPLICATION_ENDPOINT}/users/google/login`, request);
+        return response.data;
+    } catch (error) {
+     throw new Error(error.response.data.error);
+    }
+};
+
 export const Home = async () => {
     try {
         const url = `${process.env.REACT_APP_BACKEND_APPLICATION_ENDPOINT}`

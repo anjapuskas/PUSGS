@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import styles from "../Login/LoginForm.module.css";
 import { useDispatch } from 'react-redux';
-import { homeAction, loginAction } from 'slices/userSlice';
+import { googleLoginAction, homeAction, loginAction } from 'slices/userSlice';
+
+import { GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -29,6 +33,23 @@ const LoginForm = () => {
 
   // @ts-ignore
   dispatch(loginAction(request));
+  };
+
+  const handleGoogleLogin = async (data) => {
+    const request = {
+      token: data.credential
+    };
+    // @ts-ignore
+    dispatch(googleLoginAction(request))
+  };
+
+  const handleGoogleError = () => {
+    toast.error("Google login error", {
+      position: "top-center",
+      autoClose: 2500,
+      closeOnClick: true,
+      pauseOnHover: false,
+    });
   };
 
   
@@ -63,6 +84,9 @@ const LoginForm = () => {
           />
           <button type="submit" className={styles.button}>Login</button>
         </form>
+        
+          <GoogleLogin onSuccess={handleGoogleLogin} onError={handleGoogleError}/>
+        
         <p className={styles.registrationLink}>
           Don't have an account? <a href="/register">Register here</a>
         </p> 

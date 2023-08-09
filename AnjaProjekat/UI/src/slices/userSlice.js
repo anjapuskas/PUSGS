@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { useNavigate } from "react-router-dom";
-import { GetSellersForVerification, Home, Login, Profile, ProfileImage, Register, RejectUser, VerifyUser } from "services/UserService";
+import { GetSellersForVerification, GoogleLogin, Home, Login, Profile, ProfileImage, Register, RejectUser, VerifyUser } from "services/UserService";
 
 const initialState = {
   token: localStorage.getItem("token"),
@@ -87,7 +86,7 @@ const initialState = {
   );
 
   export const verifySeller = createAsyncThunk(
-    "orders/cancel",
+    "user/verify",
     async (data, thunkApi) => {
       try {
         const response = await VerifyUser(data);
@@ -99,10 +98,22 @@ const initialState = {
   );
 
   export const rejectSeller = createAsyncThunk(
-    "orders/cancel",
+    "user/reject",
     async (data, thunkApi) => {
       try {
         const response = await RejectUser(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.response.error);
+      }
+    }
+  );
+
+  export const googleLoginAction = createAsyncThunk(
+    "user/google-login",
+    async (data, thunkApi) => {
+      try {
+        const response = await GoogleLogin(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
         return thunkApi.rejectWithValue(error.response.error);
@@ -122,6 +133,15 @@ const initialState = {
     },
     extraReducers: (builder) => {
         builder.addCase(loginAction.fulfilled, (state, action) => {
+          const token = action.payload.token;
+          state.token = token;
+          state.loggedIn = true;
+          state.user = action.payload;
+    
+          localStorage.setItem("token", token);
+          localStorage.setItem("user", JSON.stringify(action.payload));
+        });
+        builder.addCase(googleLoginAction.fulfilled, (state, action) => {
           const token = action.payload.token;
           state.token = token;
           state.loggedIn = true;
