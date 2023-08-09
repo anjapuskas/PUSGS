@@ -69,6 +69,7 @@ builder.Services.AddScoped<IOrderService, OrderServiceImpl>();
 builder.Services.AddScoped<DbContext, EShopDbContext>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IMailService, MailServiceImpl>();
 
 var app = builder.Build();
 

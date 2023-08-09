@@ -17,12 +17,14 @@ namespace UserService.Service
     {
 
         private readonly IMapper _mapper;
+        private readonly IMailService _mailService;
         private readonly IRepository _repository;
         private readonly IConfiguration _configuration;
 
-        public UserServiceImpl(IMapper mapper, IRepository repository, IConfiguration configuration)
+        public UserServiceImpl(IMapper mapper, IMailService mailService, IRepository repository, IConfiguration configuration)
         {
             _mapper = mapper;
+            _mailService = mailService; 
             _repository = repository;
             _configuration = configuration; 
         }
@@ -230,6 +232,11 @@ namespace UserService.Service
             user.UserStatus = UserStatus.VERIFIED;
             _repository._userRepository.Update(user);
             await _repository.SaveChanges();
+
+            string message = "You have been approved!";
+
+
+            await _mailService.SendEmail("Verification approved", message, user.Email);
             return true;
         }
 
@@ -238,6 +245,10 @@ namespace UserService.Service
             User user = await _repository._userRepository.Get(id);
             user.UserStatus = UserStatus.REJECTED;
             _repository._userRepository.Update(user);
+            string message = "You have been rejected!";
+
+
+            await _mailService.SendEmail("Verification rejected", message, user.Email);
             await _repository.SaveChanges();
             return true;
         }
