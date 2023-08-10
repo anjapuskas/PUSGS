@@ -15,6 +15,7 @@ const Navigation = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const userRole = useSelector((state) => state.user.user.userRole);
+  const picture = useSelector((state) => state.user.user.picture);
   const numberOfItemsInCart = useSelector((state) => state.cart.amount);
   
   const isSeller = userRole === 'SELLER';
@@ -154,12 +155,30 @@ const Navigation = () => {
             </div>
           )}
           <IconButton color="inherit" onClick={handleMenuOpen}>
-            <AccountCircle />
+            {picture && (
+                <img
+                  src={`data:image/jpg;base64,${picture}`}
+                  alt="Profilna slika"
+                  style={{ width: '80px', height: '80px' }}
+                />
+              )}
+            {!picture && (
+              <AccountCircle fontSize="small" />
+            )}
           </IconButton>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
             <MenuItem onClick={handleProfileClick}>
               <ListItemIcon>
-                <AccountCircle fontSize="small" />
+              {picture && (
+                <img
+                  src={`data:image/jpg;base64,${picture}`}
+                  alt="Profilna slika"
+                  style={{ width: '80px', height: '80px' }}
+                />
+              )}
+            {!picture && (
+              <AccountCircle fontSize="small" />
+            )}
               </ListItemIcon>
               Profile
             </MenuItem>

@@ -161,6 +161,16 @@ namespace UserService.Service
                 newUser.UserStatus = UserStatus.VERIFIED;
             }
 
+            if (registerDTO.PictureFile != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    registerDTO.PictureFile.CopyTo(memoryStream);
+                    var pictureByte = memoryStream.ToArray();
+                    newUser.Picture = pictureByte;
+                }
+            }
+
             await _repository._userRepository.Insert(newUser);
             await _repository.SaveChanges();
 
@@ -168,17 +178,47 @@ namespace UserService.Service
 
         }
 
-        public async Task<bool> updateProfile(ProfileDTO profileDTO)
+        public async Task<ProfileResultDTO> updateProfile(ProfileDTO profileDTO, ClaimsPrincipal claimsPrincipal)
         {
-            User user = await _repository._userRepository.Get(profileDTO.Id);
+            var userIdClaim = claimsPrincipal.Claims.First(c => c.Type == "id").Value;
+
+            if (userIdClaim == null)
+            {
+                throw new Exception("Ponovite login");
+            }
+
+            if (!long.TryParse(userIdClaim, out long userId))
+            {
+                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+            }
+
+            User user = await _repository._userRepository.Get(userId);
             user.FirstName = profileDTO.FirstName;
             user.LastName = profileDTO.LastName;
             user.Address = profileDTO.Address;
             user.DateOfBirth = profileDTO.DateOfBirth;
-            //user.Image= resolveImage(user.Image, profileDTO.Image, user.Username);
+
+            if(profileDTO.PictureFile != null)
+                using (var ms = new MemoryStream())
+                {
+                    profileDTO.PictureFile.CopyTo(ms);
+                    var pictureByte = ms.ToArray();
+                    user.Picture = pictureByte;
+
+                }
+
             _repository._userRepository.Update(user);
             await _repository.SaveChanges();
-            return true;
+
+            ProfileResultDTO profileResultDTO = new ProfileResultDTO();
+            profileResultDTO.FirstName = profileDTO.FirstName;
+            profileResultDTO.LastName = profileDTO.LastName;
+            profileResultDTO.Address = profileDTO.Address;
+            profileResultDTO.DateOfBirth = profileDTO.DateOfBirth;
+            profileResultDTO.Picture = user.Picture;
+
+            return profileResultDTO;
+
         }
 
         public async Task<List<UserVerifyDTO>> getSellersForVerification()
@@ -226,18 +266,10 @@ namespace UserService.Service
         public async Task<ProfileImageDTO> getProfileImage(long id)
         {
             User user = await _repository._userRepository.Get(id);
-            FileStream fileStream = null;
-            if (File.Exists(user.Image))
-            {
-                fileStream = new FileStream(user.Image, FileMode.Open, FileAccess.Read);
-            }
-
-            if (fileStream == null) { return null; }
-
-            ProfileImageDTO profileImageDTO = new ProfileImageDTO();
-            profileImageDTO.Name = user.Username + ".jpg";
-            profileImageDTO.File = fileStream; ;
-            return profileImageDTO;
+            ProfileImageDTO profileImage = new ProfileImageDTO();
+            profileImage.Name = user.FirstName + user.LastName;
+            profileImage.Picture = user.Picture;
+            return profileImage;
         }
 
         public async Task<User> getUser(long id)

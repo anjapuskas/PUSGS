@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { AddOrder, CancelOrder, GetAdminOrders, GetAllOrders, GetNewOrders } from "services/OrderService";
 
 
@@ -13,7 +14,7 @@ const initialState = {
         const response = await AddOrder(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -25,7 +26,7 @@ const initialState = {
         const response = await GetAllOrders(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -37,7 +38,7 @@ const initialState = {
         const response = await GetNewOrders();
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -49,7 +50,7 @@ const initialState = {
         const response = await GetAdminOrders();
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -62,7 +63,7 @@ const initialState = {
         const response = await CancelOrder(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -82,6 +83,19 @@ const initialState = {
         });
         builder.addCase(getNewOrdersAction.fulfilled, (state, action) => {
           state.orders = action.payload;
+        });
+        builder.addCase(getNewOrdersAction.rejected, (state, action) => {
+          let error = ""; 
+          if (typeof action.payload === "string") {
+            error = action.payload;
+          }
+    
+          toast.error(error, {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
         });
         builder.addCase(getAdminOrdersAction.fulfilled, (state, action) => {
           state.orders = action.payload;

@@ -71,3 +71,19 @@
 .registrationLink a:hover {
   text-decoration: underline;
 }
+.imageContainer {
+  position: relative;
+  display: flex;
+  left: 41%;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  border: 2px dashed #999999;
+  cursor: pointer;
+}
+
+.image {
+  max-width: 100%;
+  max-height: 100%;
+}

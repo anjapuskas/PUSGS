@@ -12,5 +12,6 @@ namespace UserService.DTO
         public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
         public UserRole UserRole { get; set; }
+        public IFormFile? PictureFile { get; set; }
     }
 }

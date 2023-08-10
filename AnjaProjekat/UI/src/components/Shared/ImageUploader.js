@@ -20,7 +20,7 @@ const ImageUploader = ({ selectedImage, handleImageChange }) => {
       <div className={styles.imageContainer} onClick={handleClick}>
         {selectedImage ? (
           <img
-            src={selectedImage}
+            src={`data:image/jpg;base64,${selectedImage}`}
             alt="Uploaded"
             className={styles.image}
           />

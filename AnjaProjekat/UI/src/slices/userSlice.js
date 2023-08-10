@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import User from "models/User";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { GetSellersForVerification, GoogleLogin, Home, Login, Profile, ProfileImage, Register, RejectUser, VerifyUser } from "services/UserService";
 
@@ -6,7 +8,8 @@ const initialState = {
   token: localStorage.getItem("token"),
   loggedIn: localStorage.getItem("token") != null,
   user: localStorage.getItem("user") != null ? JSON.parse(localStorage.getItem("user")) : null,
-  sellers : []
+  sellers : [],
+  registered : false
 };
   
   export const loginAction = createAsyncThunk(
@@ -129,6 +132,7 @@ const initialState = {
       logout: (state) => {
         state.token = null;
         state.loggedIn = false;
+        state.sellers = [];
         localStorage.removeItem("token");
       },
     },
@@ -143,7 +147,7 @@ const initialState = {
           localStorage.setItem("user", JSON.stringify(action.payload));
         });
         builder.addCase(loginAction.rejected, (state, action) => {
-          let error = "LOGIN ERROR"; // Make a default error message constant somewhere
+          let error = "LOGIN ERROR"; 
           if (typeof action.payload === "string") {
             error = action.payload;
           }
@@ -165,19 +169,40 @@ const initialState = {
           localStorage.setItem("user", JSON.stringify(action.payload));
         });
         builder.addCase(registerAction.fulfilled, (state, action) => {
-          
+          state.registered = true;
+          toast.success('Registration successful', {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
+        });
+        builder.addCase(registerAction.rejected, (state, action) => {
+          state.registered = false;
+          let error = "REGISTRATION ERROR"; 
+          if (typeof action.payload === "string") {
+            error = action.payload;
+          }
+    
+          toast.error(error, {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
         });
         builder.addCase(profileAction.fulfilled, (state, action) => {
-          const token = action.payload.token;
-          state.token = token;
-          state.loggedIn = true;
+          state.user.firstName = action.payload.firstName;
+          state.user.lastName = action.payload.lastName;
+          state.user.address = action.payload.address;
+          state.user.dateOfBirth = action.payload.dateOfBirth;
+          state.user.picture = action.payload.picture;
         });
         builder.addCase(profileImageAction.fulfilled, (state, action) => {
-          const imageSrc = URL.createObjectURL(new Blob([action.payload]));
-          state.user = { ...state.user, imageSrc: imageSrc };
+          state.user = { ...state.user, imageSrc: action.payload };
         });
         builder.addCase(getSellersForVerification.fulfilled, (state, action) => {
-          state.sellers = action.payload;
+          state.sellers = action.payload.map(u => new User(u));
         });
         builder.addCase(verifySeller.fulfilled, (state, action) => {
         });

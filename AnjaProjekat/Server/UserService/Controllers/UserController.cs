@@ -32,7 +32,7 @@ namespace UserService.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> register([FromBody]RegisterDTO registerDTO)
+        public async Task<IActionResult> register([FromForm]RegisterDTO registerDTO)
         {
             Boolean boolean= await _userService.register(registerDTO);
             return Ok(boolean);
@@ -45,12 +45,12 @@ namespace UserService.Controllers
             return "Hello world";
         }
 
-        [HttpPut]
+        [HttpPost("profile")]
         [Authorize]
-        public async Task<IActionResult> Put([FromForm] ProfileDTO profileDTO)
+        public async Task<IActionResult> updateProfile([FromForm]ProfileDTO profileDTO)
         {
-            Boolean boolean = await _userService.updateProfile(profileDTO);
-            return (Ok(boolean));
+            ProfileResultDTO profileResultDTO = await _userService.updateProfile(profileDTO, User);
+            return (Ok(profileResultDTO));
         }
 
         [Authorize]
@@ -58,7 +58,7 @@ namespace UserService.Controllers
         public async Task<IActionResult> profileImage(long id)
         {
             ProfileImageDTO file = await _userService.getProfileImage(id);
-            return File(file.File, "application/octet-stream", file.Name);
+            return Ok(file);
         }
 
         [HttpGet("verify")]

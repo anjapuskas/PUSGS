@@ -3,11 +3,14 @@ import styles from './RegistrationForm.module.css';
 import { Button, Container, Link, TextField, Typography, Select, MenuItem } from '@mui/material';
 import { DatePicker, DesktopDatePicker } from '@mui/x-date-pickers';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { registerAction } from 'slices/userSlice';
+import { useNavigate } from 'react-router';
 
 const RegistrationForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const registered = useSelector((state) => state.user.registered);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -16,7 +19,8 @@ const RegistrationForm = () => {
   const [date, setDate] = useState(null);
   const [isDateValid, setIsDateValid] = useState(false);
   const [isDateTouched, setIsDateTouched] = useState(false);
-  const [userRole, setUserRole] = useState(0); // Default user role is set to ADMIN
+  const [userRole, setUserRole] = useState(0);
+  const [picture, setPicture] = useState(null);
 
   const dateChangeHandler = (value) => {
     setDate(value);
@@ -37,6 +41,8 @@ const RegistrationForm = () => {
     const password = formData.get('password');
     const passwordRepeat = formData.get('passwordRepeat');
     const address = formData.get('address');
+    formData.append('pictureFile', picture);
+    formData.append('dateOfBirth', date.toUTCString())
 
     if (
       username == null ||
@@ -62,19 +68,11 @@ const RegistrationForm = () => {
 
     event.preventDefault();
 
-    const request = {
-      username: username.toString().trim(),
-      firstName: firstName.toString().trim(),
-      lastName: lastName.toString().trim(),
-      email: email.toString().trim(),
-      password: password.toString().trim(),
-      address: address.toString().trim(),
-      dateOfBirth: date,
-      userRole: userRole,
-    };
-
     // @ts-ignore
-    dispatch(registerAction(request));
+    dispatch(registerAction(formData))
+    if(registered) {
+      navigate('/login');
+    }
   };
 
   return (
@@ -153,6 +151,11 @@ const RegistrationForm = () => {
             <MenuItem value={1}>Seller</MenuItem>
             <MenuItem value={2}>Buyer</MenuItem>
           </Select>
+          <div>
+            <label>Picture:</label>
+            <input type="file" accept="image/*" onChange={(e) => setPicture(e.target.files[0])} />
+          </div>
+
           <Button type="submit" variant="contained" className={styles.button}>
             Register
           </Button>

@@ -11,6 +11,6 @@
         public string Address { get; set; }
         public UserRole UserRole { get; set; }
         public UserStatus UserStatus { get; set; }
-        public string Image { get; set; }
+        public byte[]? Picture { get; set; }
     }
 }

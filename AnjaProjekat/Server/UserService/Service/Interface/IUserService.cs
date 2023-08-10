@@ -1,4 +1,5 @@
-﻿using UserService.DTO;
+﻿using System.Security.Claims;
+using UserService.DTO;
 using UserService.Model;
 
 namespace UserService.Service.Interface
@@ -8,7 +9,7 @@ namespace UserService.Service.Interface
         Task<LoginResultDTO> login(LoginAttemptDTO login);
         Task<LoginResultDTO> googleLogin(GoogleLoginAttemptDTO login);
         Task<Boolean> register(RegisterDTO registerDTO);
-        Task<Boolean> updateProfile(ProfileDTO profileDTO);
+        Task<ProfileResultDTO> updateProfile(ProfileDTO profileDTO, ClaimsPrincipal claimsPrincipal);
         Task<ProfileImageDTO> getProfileImage(long id);
         Task<User> getUser(long id);
         Task<List<UserVerifyDTO>> getSellersForVerification();

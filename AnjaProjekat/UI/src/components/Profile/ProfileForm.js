@@ -21,16 +21,13 @@ const ProfileForm = () => {
     const [isDateValid, setIsDateValid] = useState(false);
     const [isDateTouched, setIsDateTouched] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [picture, setPicture] = useState(null);
     const isSeller = user.userRole === 'SELLER';
 
     useEffect(() => {
         if (user.dateOfBirth) {
           setDate(new Date(user.dateOfBirth));
         }
-//        if (user.image) {
-            // @ts-ignore
-  //          dispatch(profileImageAction(user.id));
-    //      }
       }, [user.dateOfBirth]);
     
     const dateChangeHandler = (value) => {
@@ -41,18 +38,15 @@ const ProfileForm = () => {
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
-        setSelectedImage(URL.createObjectURL(file));
+        setSelectedImage(file);
+        user.picture = file;
     };
 
     const handleSubmit = (event) => {
 
-        const formData = new FormData();
-        formData.append('id', user.id);
-        formData.append('firstName', event.target.firstName.value);
-        formData.append('lastName', event.target.lastName.value);
-        formData.append('address', event.target.address.value);
-        formData.append('dateOfBirth', date.toISOString());
-        formData.append('image', selectedImage);
+        const formData = new FormData(event.currentTarget);
+        formData.append('pictureFile', picture);
+        event.preventDefault();
 
         
         // @ts-ignore
@@ -67,11 +61,19 @@ const ProfileForm = () => {
           <Typography variant="h2" component="h2" className={styles.title}>
             Profile
           </Typography>
+          <div className={styles.imageContainer}>
+              {user.picture ? (
+                <img
+                  src={`data:image/jpg;base64,${user.picture}`}
+                  alt="Uploaded"
+                  className={styles.image}
+                />
+              ) : (
+                <div className={styles.placeholder}>Select an Image</div>
+              )}
+            </div>
           <form className={styles.form} onSubmit={handleSubmit}>
-          <ImageUploader
-          selectedImage={selectedImage ? selectedImage : user.imageSrc}
-          handleImageChange={handleImageChange}
-        />
+
             <TextField
               margin="normal"
               className={styles.input}
@@ -113,8 +115,12 @@ const ProfileForm = () => {
                 label="Birthday"
                 error={isDateTouched && !isDateValid}
                 onChange={(value) => dateChangeHandler(new Date(value))}
-                value = {date}
+                defaultValue={new Date(user.dateOfBirth || new Date())}
               />
+            <div>
+              <label>Change Picture:</label>
+            <input type="file" accept="image/*" onChange={(e) => setPicture(e.target.files[0])} />
+          </div>
             <Button
               type="submit"
               variant="contained"

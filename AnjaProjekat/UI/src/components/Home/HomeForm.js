@@ -26,11 +26,6 @@ const HomeForm = () => {
     handleMenuClose();
   };
 
-  const handleLogoutClick = () => {
-    dispatch(logout());
-    handleMenuClose();
-  };
-
   return (
     <div className={styles.container}>
       <Navigation/>

@@ -11,5 +11,6 @@
         public string UserRole { get; set; }
         public string UserStatus { get; set; }
         public string Token { get; set; }
+        public byte[]? Picture { get; set; }
     }
 }
