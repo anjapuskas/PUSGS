@@ -49,10 +49,19 @@ const initialState = {
             localStorage.setItem("amount", state.amount.toString())
             localStorage.setItem("price", state.price.toString())
           },
+          removeFromCart: (state, action) => {
+            state.products = [];
+            state.price = 0;
+            state.amount = 0;
+          
+            localStorage.removeItem("products");
+            localStorage.removeItem("amount");
+            localStorage.removeItem("price")
+          }
     }
     
 });
 
-export const { addToCart, amountChange } = cartSlice.actions;
+export const { addToCart, amountChange, removeFromCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

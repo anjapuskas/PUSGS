@@ -52,7 +52,7 @@ const OrdersListForm = () => {
               <TableCell>{order.orderStatus}</TableCell>
               <TableCell>{order.price}</TableCell>
               <TableCell>
-                <Button variant="outlined" color="secondary" onClick={() => handleCancelOrder(order.id)}>
+                <Button disabled={order.orderStatus == 'ORDERED'} variant="outlined" color="secondary" onClick={() => handleCancelOrder(order.id)}>
                   Cancel
                 </Button>
               </TableCell>

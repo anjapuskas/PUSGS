@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Container, CssBaseline, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 
 import Navigation from 'components/Navigation/Navigation';
-import { cancelOrder, getAllOrdersAction } from 'slices/orderSlice';
+import { cancelOrder, getAllOrdersAction, getNewOrdersAction } from 'slices/orderSlice';
 
 const NewOrdersListForm = () => {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ const NewOrdersListForm = () => {
   useEffect(() => {
 
     // @ts-ignore
-    dispatch(getAllOrdersAction(user.id));
+    dispatch(getNewOrdersAction(user.id));
   }, []);
 
   return (

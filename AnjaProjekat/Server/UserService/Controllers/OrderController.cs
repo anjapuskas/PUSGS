@@ -38,7 +38,7 @@ namespace UserService.Configuration
         [Authorize(Roles = "SELLER")]
         public async Task<IActionResult> getNewOrders()
         {
-            List<OrderDTO> orders = await _orderService.getNewOrders();
+            List<OrderDTO> orders = await _orderService.getNewOrders(User);
             return Ok(orders);
         }
 

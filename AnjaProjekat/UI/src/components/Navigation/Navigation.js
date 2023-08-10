@@ -8,6 +8,7 @@ import { logout } from 'slices/userSlice';
 import styles from './Navigation.module.css';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { removeFromCart } from 'slices/cartSlice';
 
 const Navigation = () => {
   const dispatch = useDispatch();
@@ -67,6 +68,7 @@ const Navigation = () => {
 
   const handleLogoutClick = () => {
     dispatch(logout());
+    dispatch(removeFromCart());
     handleMenuClose();
   };
 
@@ -83,7 +85,7 @@ const Navigation = () => {
           </div>
           <div style={{ flexGrow: 1 }} />
           {isSeller && (
-            <div>
+            <div style={{padding: 1}}>
               <IconButton edge="start" color="inherit" onClick={handleAddProductClick}>
                 <AddBox />
                 <Typography variant="body1" component="span">
@@ -93,7 +95,7 @@ const Navigation = () => {
             </div>
           )}
           {(isBuyer || isSeller) && (
-            <div>
+            <div style={{padding: 1}}>
               <IconButton edge="start" color="inherit" onClick={handleProductsClick}>
                 <InventoryIcon />
                 <Typography variant="body1" component="span">
@@ -103,7 +105,7 @@ const Navigation = () => {
             </div>
           )}
           {(isBuyer || isSeller) && (
-            <div>
+            <div style={{padding: 1}}>
               <IconButton edge="start" color="inherit" onClick={handleOrdersClick}>
                 <ViewList />
                 <Typography variant="body1" component="span">
@@ -113,7 +115,7 @@ const Navigation = () => {
             </div>
           )}
           {isSeller && (
-            <div>
+            <div style={{padding: 1}}>
               <IconButton edge="start" color="inherit" onClick={handleNewOrdersClick}>
                 <ViewStream />
                 <Typography variant="body1" component="span">
@@ -122,17 +124,8 @@ const Navigation = () => {
               </IconButton>
             </div>
           )}
-          <div style={{ flexGrow: 1 }} />
-          {(isBuyer || isSeller) && (
-            <div>
-              <IconButton edge="start" color="inherit" onClick={handleCartClick}>
-                <ShoppingCartIcon />
-                {numberOfItemsInCart > 0 && <span className={styles.cartItemCount}>{numberOfItemsInCart}</span>}
-              </IconButton>
-            </div>
-          )}
           {isAdmin && (
-            <div>
+            <div style={{padding: 1}}>
               <IconButton edge="start" color="inherit" onClick={handleAdminOrdersClick}>
                 <ViewStream />
                 <Typography variant="body1" component="span">
@@ -148,6 +141,15 @@ const Navigation = () => {
                 <Typography variant="body1" component="span">
                   Verify Users
                 </Typography>
+              </IconButton>
+            </div>
+          )}
+          <div style={{ flexGrow: 1 }} />
+          {(isBuyer || isSeller) && (
+            <div>
+              <IconButton edge="start" color="inherit" onClick={handleCartClick}>
+                <ShoppingCartIcon />
+                {numberOfItemsInCart > 0 && <span className={styles.cartItemCount}>{numberOfItemsInCart}</span>}
               </IconButton>
             </div>
           )}

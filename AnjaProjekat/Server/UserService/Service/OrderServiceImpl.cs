@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Security.Claims;
 using UserService.Data;
 using UserService.DTO;
 using UserService.Model;
@@ -13,13 +14,15 @@ namespace UserService.Service
         private readonly IRepository _repository;
         private readonly IProductService _productService;
         private readonly IUserService _userService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OrderServiceImpl(IMapper mapper, IRepository repository, IProductService productService, IUserService userService)
+        public OrderServiceImpl(IMapper mapper, IRepository repository, IProductService productService, IUserService userService, IHttpContextAccessor httpContextAccessor)
         {
             _mapper = mapper;
             _repository = repository;
             _productService = productService;
             _userService = userService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<bool> addOrder(CreateOrderDTO createOrderDTO)
@@ -67,8 +70,29 @@ namespace UserService.Service
             return orderDTOs;
         }
 
-        public async Task<List<OrderDTO>> getNewOrders()
+        public async Task<List<OrderDTO>> getNewOrders(System.Security.Claims.ClaimsPrincipal claimsPrincipal)
         {
+            var userIdClaim = claimsPrincipal.Claims.First(c => c.Type == "id").Value;
+
+            if(userIdClaim == null)
+            {
+                throw new Exception("Ponovite login");
+            }
+
+            if (!long.TryParse(userIdClaim, out long userId))
+            {
+                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+            }
+
+            User user = await _userService.getUser(userId);
+
+            if(user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
+            {
+                
+                throw new Exception("Korisnik jos nije verifikovan");
+                
+            }
+
             var orders = await _repository._orderRepository.GetAll();
             List<Order> ordersList = orders.Where(o => o.OrderStatus == OrderStatus.ORDERED).ToList();
             List<OrderDTO> orderDTOs = new List<OrderDTO>();

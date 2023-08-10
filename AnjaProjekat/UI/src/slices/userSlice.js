@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { GetSellersForVerification, GoogleLogin, Home, Login, Profile, ProfileImage, Register, RejectUser, VerifyUser } from "services/UserService";
 
 const initialState = {
@@ -16,7 +17,7 @@ const initialState = {
         const response = await Login(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -29,7 +30,7 @@ const initialState = {
         const response = await Home();
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -42,7 +43,7 @@ const initialState = {
         const response = await Register(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -55,7 +56,7 @@ const initialState = {
         const response = await Profile(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -68,7 +69,7 @@ const initialState = {
         const response = await ProfileImage(id);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -80,7 +81,7 @@ const initialState = {
         const response = await GetSellersForVerification();
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -92,7 +93,7 @@ const initialState = {
         const response = await VerifyUser(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -104,7 +105,7 @@ const initialState = {
         const response = await RejectUser(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -116,7 +117,7 @@ const initialState = {
         const response = await GoogleLogin(data);
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
-        return thunkApi.rejectWithValue(error.response.error);
+        return thunkApi.rejectWithValue(error.message);
       }
     }
   );
@@ -140,6 +141,19 @@ const initialState = {
     
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(action.payload));
+        });
+        builder.addCase(loginAction.rejected, (state, action) => {
+          let error = "LOGIN ERROR"; // Make a default error message constant somewhere
+          if (typeof action.payload === "string") {
+            error = action.payload;
+          }
+    
+          toast.error(error, {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
         });
         builder.addCase(googleLoginAction.fulfilled, (state, action) => {
           const token = action.payload.token;
@@ -166,6 +180,8 @@ const initialState = {
           state.sellers = action.payload;
         });
         builder.addCase(verifySeller.fulfilled, (state, action) => {
+        });
+        builder.addCase(rejectSeller.fulfilled, (state, action) => {
         });
     },
     

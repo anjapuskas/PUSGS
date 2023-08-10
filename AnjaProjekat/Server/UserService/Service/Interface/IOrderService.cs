@@ -8,7 +8,7 @@ namespace UserService.Service.Interface
 
         Task<List<OrderDTO>> getAllOrders(long id);
 
-        Task<List<OrderDTO>> getNewOrders();
+        Task<List<OrderDTO>> getNewOrders(System.Security.Claims.ClaimsPrincipal user);
 
         Task<List<OrderDTO>> getAdminOrders();
 

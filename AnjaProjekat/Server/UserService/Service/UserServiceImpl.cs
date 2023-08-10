@@ -34,6 +34,11 @@ namespace UserService.Service
             var users = await _repository._userRepository.GetAll();
             User? user = users.FirstOrDefault(u => u.Username == login.Username);
 
+            if(user == null)
+            {
+                throw new CredentialsException("User does not exist");
+            }
+
 
             if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
             {
@@ -41,6 +46,7 @@ namespace UserService.Service
             }
             List<Claim> claims = new List<Claim>
             {
+                new Claim("id", user.Id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.UserRole.ToString())
@@ -75,8 +81,6 @@ namespace UserService.Service
             };
 
             var googleInfo = await GoogleJsonWebSignature.ValidateAsync(login.Token, validiran);
-
-
 
             var users = await _repository._userRepository.GetAll();
             User? user = users.FirstOrDefault(u => u.Email == googleInfo.Email);
@@ -130,19 +134,34 @@ namespace UserService.Service
 
         public async Task<bool> register(RegisterDTO registerDTO)
         {
-            User user = _mapper.Map<User>(registerDTO);
+            User newUser = _mapper.Map<User>(registerDTO);
 
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            var users = await _repository._userRepository.GetAll();
+            User? user = users.FirstOrDefault(u => u.Username == newUser.Username);
 
-            if(user.UserRole == UserRole.SELLER)
+            if (user != null)
             {
-                user.UserStatus = UserStatus.ON_HOLD;
-            } else
-            {
-                user.UserStatus = UserStatus.VERIFIED;
+                throw new CredentialsException("Username already exists!");
             }
 
-            await _repository._userRepository.Insert(user);
+            user = null;
+            user = users.FirstOrDefault(u => u.Email == newUser.Email);
+            if (user != null)
+            {
+                throw new CredentialsException("Email already exists!");
+            }
+
+            newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+
+            if(newUser.UserRole == UserRole.SELLER)
+            {
+                newUser.UserStatus = UserStatus.ON_HOLD;
+            } else
+            {
+                newUser.UserStatus = UserStatus.VERIFIED;
+            }
+
+            await _repository._userRepository.Insert(newUser);
             await _repository.SaveChanges();
 
             return true;
@@ -234,8 +253,6 @@ namespace UserService.Service
             await _repository.SaveChanges();
 
             string message = "You have been approved!";
-
-
             await _mailService.SendEmail("Verification approved", message, user.Email);
             return true;
         }

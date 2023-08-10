@@ -22,7 +22,7 @@ namespace UserService.Controllers
         [Authorize(Roles = "SELLER")]
         public async Task<IActionResult> addProduct([FromBody] ProductDTO productDTO)
         {
-            Boolean addProductResult = await _productService.addProduct(productDTO);
+            Boolean addProductResult = await _productService.addProduct(productDTO, User);
             return Ok(addProductResult);
         }
 
