@@ -32,12 +32,13 @@ const ProductItem = (product) => {
                     </div>
                 </Grid>
                 <Grid item>
-                <CardMedia
-                    component="img"
-                    alt="Sample Image"
-                    image={product.item.image}
-                    height="150"
-                    />
+                    <div className={styles.imageContainer}>
+                        <img
+                        src={`data:image/jpg;base64,${product.item.picture}`}
+                        alt="No picture"
+                        className={styles.image}
+                        />
+                    </div>
                 </Grid>
             </Grid>
             <Grid container
@@ -52,6 +53,9 @@ const ProductItem = (product) => {
                 <Grid item>
                 <Typography variant="body2" component="p" className={styles.price}>
                     Price: {product.item.price} $
+                </Typography>
+                <Typography variant="body2" component="p" className={styles.price}>
+                    Amount: {product.item.amount}
                 </Typography>
                 <ProductAddToCart item={product.item}/>
                 </Grid>

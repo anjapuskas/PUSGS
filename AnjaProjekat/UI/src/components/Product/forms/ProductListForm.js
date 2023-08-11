@@ -13,7 +13,7 @@ const ProductListForm = () => {
   const user = useSelector((state) => state.user.user);
 
   // @ts-ignore
-  const products = useSelector((state) => state.products.products);
+  let products = useSelector((state) => state.products.products);
 
   useEffect(() => {
 

@@ -45,7 +45,16 @@ namespace UserService.Service
             }
 
             Product product = _mapper.Map<Product>(addProductDTO);
-            product.Image = "";
+
+            if (addProductDTO.PictureFile != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    addProductDTO.PictureFile.CopyTo(memoryStream);
+                    var pictureByte = memoryStream.ToArray();
+                    product.Picture = pictureByte;
+                }
+            }
 
             await _repository._productRepository.Insert(product);
             await _repository.SaveChanges();
@@ -53,14 +62,14 @@ namespace UserService.Service
            return true;
         }
 
-        public async Task<List<ProductDTO>> getAllProducts()
+        public async Task<List<ProductItemDTO>> getAllProducts()
         {
             var products = await _repository._productRepository.GetAll();
-            List<Product> sellerProducts = products.ToList();
-            List<ProductDTO> productDTOs = new List<ProductDTO>();
-            foreach (Product product in products)
+            List<Product> productList = products.Where(p => p.Amount > 0).ToList();
+            List<ProductItemDTO> productDTOs = new List<ProductItemDTO>();
+            foreach (Product product in productList)
             {
-                productDTOs.Add(_mapper.Map<ProductDTO>(product));
+                productDTOs.Add(_mapper.Map<ProductItemDTO>(product));
             }
 
             return productDTOs;

@@ -42,6 +42,13 @@ namespace UserService.Service
                 orderProduct.Product = await _productService.getProduct(product.Id);
                 orderProduct.Price = product.Price;
                 orderProduct.Amount = product.Amount;
+
+                if(orderProduct.Product.Amount < product.Amount)
+                {
+                    throw new Exception("Nedovoljno kolicine za proizvod " + product.Name);
+                }
+                orderProduct.Product.Amount = orderProduct.Product.Amount - product.Amount;
+
                 order.OrderProducts.Add(orderProduct);
             }
 

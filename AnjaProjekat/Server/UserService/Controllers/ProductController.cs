@@ -20,7 +20,7 @@ namespace UserService.Controllers
 
         [HttpPost("add")]
         [Authorize(Roles = "SELLER")]
-        public async Task<IActionResult> addProduct([FromBody] ProductDTO productDTO)
+        public async Task<IActionResult> addProduct([FromForm] ProductDTO productDTO)
         {
             Boolean addProductResult = await _productService.addProduct(productDTO, User);
             return Ok(addProductResult);
@@ -30,7 +30,7 @@ namespace UserService.Controllers
         [Authorize]
         public async Task<IActionResult> getAllProducts()
         {
-            List<ProductDTO> products = await _productService.getAllProducts();
+            List<ProductItemDTO> products = await _productService.getAllProducts();
             return Ok(products);
         }
 

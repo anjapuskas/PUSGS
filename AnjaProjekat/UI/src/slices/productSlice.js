@@ -36,6 +36,12 @@ const initialState = {
     name: "product",
     initialState,
     reducers: {
+      amountProductChange: (state, action) => {
+        const item = state.products.find((item) => item.id == action.payload.id)
+        if(item) {
+            item.amount--;
+        }
+      },
     },
     extraReducers: (builder) => {
         builder.addCase(addProductAction.fulfilled, (state, action) => {
@@ -59,5 +65,6 @@ const initialState = {
     }
     
 });
+export const { amountProductChange } = productSlice.actions;
 
 export default productSlice.reducer;

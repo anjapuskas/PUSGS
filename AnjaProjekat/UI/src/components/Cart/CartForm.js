@@ -5,7 +5,7 @@ import { DatePicker, DesktopDatePicker } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProductAction } from 'slices/productSlice';
 import Navigation from 'components/Navigation/Navigation';
-import { amountChange } from 'slices/cartSlice';
+import { amountChange, removeFromCart } from 'slices/cartSlice';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { addOrderAction } from 'slices/orderSlice';
@@ -50,7 +50,7 @@ const CartForm = () => {
     
         // @ts-ignore
         dispatch(addOrderAction(order));
-    
+        dispatch(removeFromCart());
       };
 
   return (

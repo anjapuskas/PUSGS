@@ -11,6 +11,7 @@ const AddProductForm = () => {
   const [price, setPrice] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
+  const [picture, setPicture] = useState(null);
 
   const dispatch = useDispatch();
   const handleProductNameChange = (event) => {
@@ -32,16 +33,12 @@ const AddProductForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Create a new product object
-    const newProduct = {
-      name: productName.trim(),
-      price: price.trim(),
-      amount: amount.trim(),
-      description: description.trim(),
-    };
+    const formData = new FormData(event.currentTarget);
+    formData.append('pictureFile', picture);
+    event.preventDefault();
 
     // @ts-ignore
-    dispatch(addProductAction(newProduct));
+    dispatch(addProductAction(formData));
 
   };
 
@@ -58,7 +55,7 @@ const AddProductForm = () => {
             margin="normal"
             className={styles.input}
             label="Product Name"
-            name="productName"
+            name="name"
             value={productName}
             onChange={handleProductNameChange}
           />
@@ -88,6 +85,10 @@ const AddProductForm = () => {
             value={description}
             onChange={handleDescriptionChange}
           />
+          <div>
+            <label>Picture:</label>
+            <input type="file" accept="image/*" onChange={(e) => setPicture(e.target.files[0])} />
+          </div>
           <Button type="submit" variant="contained" className={styles.button}>
             Add Product
           </Button>

@@ -76,6 +76,19 @@ const initialState = {
     extraReducers: (builder) => {
         builder.addCase(addOrderAction.fulfilled, (state, action) => {
         });
+        builder.addCase(addOrderAction.rejected, (state, action) => {
+          let error = ""; 
+          if (typeof action.payload === "string") {
+            error = action.payload;
+          }
+    
+          toast.error(error, {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
+        });
         builder.addCase(getAllOrdersAction.fulfilled, (state, action) => {
           state.orders = action.payload;
         });

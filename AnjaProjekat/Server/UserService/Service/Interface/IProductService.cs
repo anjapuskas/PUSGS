@@ -8,7 +8,7 @@ namespace UserService.Service.Interface
     {
         Task<Boolean> addProduct(ProductDTO addProductDTO, ClaimsPrincipal claimsPrincipal);
 
-        Task<List<ProductDTO>> getAllProducts();
+        Task<List<ProductItemDTO>> getAllProducts();
 
         Task<Product> getProduct(long id);
 
