@@ -43,8 +43,22 @@ const ProfileForm = () => {
     };
 
     const handleSubmit = (event) => {
+      const formData = new FormData(event.currentTarget);
 
-        const formData = new FormData(event.currentTarget);
+
+      const firstName = formData.get('firstName');
+      const lastName = formData.get('lastName');
+
+      if(firstName.toString().trim().match(/\d+/g) || lastName.toString().trim().match(/\d+/g)) {
+        toast.error('Numbers not allowed in the first name and last name fields', {
+          position: 'top-center',
+          autoClose: 3000,
+          closeOnClick: true,
+          pauseOnHover: false,
+        });
+        return;
+      }
+
         formData.append('pictureFile', picture);
         event.preventDefault();
 

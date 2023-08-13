@@ -16,10 +16,12 @@ const RegistrationForm = () => {
     const { name, value } = event.target;
   };
 
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
   const [date, setDate] = useState(null);
   const [isDateValid, setIsDateValid] = useState(false);
   const [isDateTouched, setIsDateTouched] = useState(false);
-  const [userRole, setUserRole] = useState(0);
+  const [userRole, setUserRole] = useState(2);
   const [picture, setPicture] = useState(null);
 
   const dateChangeHandler = (value) => {
@@ -42,7 +44,10 @@ const RegistrationForm = () => {
     const passwordRepeat = formData.get('passwordRepeat');
     const address = formData.get('address');
     formData.append('pictureFile', picture);
-    formData.append('dateOfBirth', date.toUTCString())
+    if(date) {
+      formData.append('dateOfBirth', date.toUTCString())
+    }
+    
 
     if (
       username == null ||
@@ -50,9 +55,18 @@ const RegistrationForm = () => {
       lastName == null ||
       email == null ||
       password == null ||
-      passwordRepeat == null ||
-      address == null
+      passwordRepeat == null
     ) {
+      return;
+    }
+
+    if(firstName.toString().trim().match(/\d+/g) || lastName.toString().trim().match(/\d+/g)) {
+      toast.error('Numbers not allowed in the first name and last name fields', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
       return;
     }
 
@@ -87,6 +101,7 @@ const RegistrationForm = () => {
             className={styles.input}
             label="Username"
             name="username"
+            required
             onChange={handleInputChange}
           />
           <TextField
@@ -94,6 +109,7 @@ const RegistrationForm = () => {
             className={styles.input}
             label="First Name"
             name="firstName"
+            required
             onChange={handleInputChange}
           />
           <TextField
@@ -101,13 +117,16 @@ const RegistrationForm = () => {
             className={styles.input}
             label="Last Name"
             name="lastName"
+            required
             onChange={handleInputChange}
           />
           <TextField
             margin="normal"
+            type='email'
             className={styles.input}
             label="Email"
             name="email"
+            required
             onChange={handleInputChange}
           />
           <TextField
@@ -116,6 +135,7 @@ const RegistrationForm = () => {
             label="Password"
             name="password"
             type="password"
+            required
             onChange={handleInputChange}
           />
           <TextField
@@ -124,6 +144,7 @@ const RegistrationForm = () => {
             label="Repeat Password"
             name="passwordRepeat"
             type="password"
+            required
             onChange={handleInputChange}
           />
           <TextField
@@ -146,6 +167,8 @@ const RegistrationForm = () => {
             className={styles.input}
             label="User Role"
             value={userRole}
+            defaultValue={2}
+            required
             onChange={handleUserRoleChange}
           >
             <MenuItem value={1}>Seller</MenuItem>

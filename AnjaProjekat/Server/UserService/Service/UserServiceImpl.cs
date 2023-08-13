@@ -77,7 +77,7 @@ namespace UserService.Service
 
             var validiran = new GoogleJsonWebSignature.ValidationSettings()
             {
-                Audience = new List<string>() { "992296743500-b03369t6d0irjg28vf57ug80unsntiid.apps.googleusercontent.com" }
+                Audience = new List<string>() { _configuration.GetSection("ApplicationSettings")["GoogleLogin"] }
             };
 
             var googleInfo = await GoogleJsonWebSignature.ValidateAsync(login.Token, validiran);
