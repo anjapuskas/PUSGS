@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './RegistrationForm.module.css';
-import { Button, Container, Link, TextField, Typography, Select, MenuItem } from '@mui/material';
+import { Button, Container, Link, TextField, Typography, Select, MenuItem, FormControlLabel, RadioGroup, FormLabel, Radio } from '@mui/material';
 import { DatePicker, DesktopDatePicker } from '@mui/x-date-pickers';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,7 +21,7 @@ const RegistrationForm = () => {
   const [date, setDate] = useState(null);
   const [isDateValid, setIsDateValid] = useState(false);
   const [isDateTouched, setIsDateTouched] = useState(false);
-  const [userRole, setUserRole] = useState(2);
+  const [userRole, setUserRole] = useState('SELLER');
   const [picture, setPicture] = useState(null);
 
   const dateChangeHandler = (value) => {
@@ -47,6 +47,7 @@ const RegistrationForm = () => {
     if(date) {
       formData.append('dateOfBirth', date.toUTCString())
     }
+    formData.append('userRole', userRole);
     
 
     if (
@@ -60,8 +61,20 @@ const RegistrationForm = () => {
       return;
     }
 
+    event.preventDefault();
+
     if(firstName.toString().trim().match(/\d+/g) || lastName.toString().trim().match(/\d+/g)) {
       toast.error('Numbers not allowed in the first name and last name fields', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+      return;
+    }
+
+    if( !userRole || (!(userRole === 'BUYER' || userRole === 'SELLER'))) {
+      toast.error('Please choose a role', {
         position: 'top-center',
         autoClose: 3000,
         closeOnClick: true,
@@ -79,8 +92,6 @@ const RegistrationForm = () => {
       });
       return;
     }
-
-    event.preventDefault();
 
     // @ts-ignore
     dispatch(registerAction(formData))
@@ -163,17 +174,16 @@ const RegistrationForm = () => {
             error={isDateTouched && !isDateValid}
             onChange={(value) => dateChangeHandler(new Date(value))}
           />
-          <Select
-            className={styles.input}
-            label="User Role"
+          <FormLabel id='RoleLabel'>User Role</FormLabel>
+          <RadioGroup
+            aria-labelledby='RoleLabel'
+            defaultValue='1'
             value={userRole}
-            defaultValue={2}
-            required
             onChange={handleUserRoleChange}
           >
-            <MenuItem value={1}>Seller</MenuItem>
-            <MenuItem value={2}>Buyer</MenuItem>
-          </Select>
+            <FormControlLabel value='SELLER' control={<Radio />} label='Seller' />
+            <FormControlLabel value='BUYER' control={<Radio />} label='Buyer' />
+          </RadioGroup>
           <div>
             <label>Picture:</label>
             <input type="file" accept="image/*" onChange={(e) => setPicture(e.target.files[0])} />
