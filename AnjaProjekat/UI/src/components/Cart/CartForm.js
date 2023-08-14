@@ -1,6 +1,6 @@
 import styles from './CartForm.module.css';
 import React, { useState } from 'react';
-import { Box, Button, Card, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Container, FormControlLabel, Grid, Paper, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { DatePicker, DesktopDatePicker } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProductAction } from 'slices/productSlice';
@@ -9,11 +9,14 @@ import { amountChange, removeFromCart } from 'slices/cartSlice';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { addOrderAction } from 'slices/orderSlice';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { toast } from 'react-toastify';
 
 const CartForm = () => {
     const dispatch = useDispatch();
     const [comment, setComment] = useState('');
     const [address, setAddress] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('Cash');
     const products = useSelector((state) => state.cart.products);
     const amount = useSelector((state) => state.cart.amount);
     const price = useSelector((state) => state.cart.price);
@@ -26,6 +29,10 @@ const CartForm = () => {
     const handleAddressChange = (event) => {
         setAddress(event.target.value);
     };
+
+    const handlePaymentMethod = (event) => {
+      setPaymentMethod(event.target.value);
+    }
 
     const handleAmountChange = (id, increment) => {
         const amountChangeObj = {
@@ -142,6 +149,62 @@ const CartForm = () => {
                         value={address}
                         onChange={handleAddressChange}
                     />
+                    <RadioGroup
+                      aria-labelledby='RoleLabel'
+                      defaultValue='1'
+                      value={paymentMethod}
+                      onChange={handlePaymentMethod}
+                    >
+                      <FormControlLabel value='Cash' control={<Radio />} label='Cash' />
+                      <FormControlLabel value='Card' control={<Radio />} label='Card' />
+                    </RadioGroup>
+                    {paymentMethod === 'Card' && products.length !== 0 && address.length !== 0 && (
+                    <PayPalScriptProvider
+                      options={{
+                        currency: 'USD',
+                        clientId: 'ASwigux30mI7sbfFlISmuRfC5l-f4SqmCRutHdlhto_OyO7cgtmXcF-kQlPbTE1XDi39uVZI5v0rpDLY'
+                      }}
+                    >
+                      <PayPalButtons
+                        style={{ label: 'checkout' }}
+                        createOrder={async (data, actions) => {
+                          return actions.order
+                            .create({
+                              purchase_units: [
+                                {
+                                  amount: {
+                                    value: price.toFixed(2)
+                                      .toString(),
+                                    currency_code: 'USD'
+                                  }
+                                }
+                              ]
+                            })
+                            .then((result) => {
+                              return result
+                            })
+                            .catch((error) => {
+                              return Promise.reject('')
+                            })
+                        }}
+                        onApprove={async (data, actions) => {
+                          return actions.order
+                            ?.capture()
+                            .then(() => {
+                              toast.success('Registration successful', {
+                                position: "top-center",
+                                autoClose: 2500,
+                                closeOnClick: true,
+                                pauseOnHover: false,
+                              });
+                              //makeOrder(true)
+                            })
+                            .catch(() => {
+                            })
+                        }}
+                      />
+                    </PayPalScriptProvider>
+                  )}
                     <Button variant="contained" type="submit" color="primary" className={styles.button} fullWidth>
                         Proceed to Checkout
                     </Button>
