@@ -1,10 +1,11 @@
 export class Product {
     constructor(product) {
+        this.id = product.id
         this.name = product.name;
-        this.image = product.image;
         this.description = product.description;
         this.amount = product.amount;
         this.price = product.price;
+        this.picture = product.picture
     }
 }
 export default Product;

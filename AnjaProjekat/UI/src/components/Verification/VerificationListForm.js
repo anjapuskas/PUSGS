@@ -24,7 +24,7 @@ const VerificationListForm = () => {
     // @ts-ignore
     dispatch(verifySeller(id));
     // @ts-ignore
-    dispatch(getSellersForVerification(id));
+    window.location.reload(false);
   };
 
   const handleReject = (id) => {

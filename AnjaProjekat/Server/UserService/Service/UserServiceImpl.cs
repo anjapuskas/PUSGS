@@ -39,6 +39,16 @@ namespace UserService.Service
                 throw new CredentialsException("User does not exist");
             }
 
+            if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
+            {
+                throw new CredentialsException("User is not verified. Please wait from verification from Admin.");
+            }
+
+            if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.REJECTED)
+            {
+                throw new CredentialsException("User is rejected and can not log in.");
+            }
+
 
             if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
             {

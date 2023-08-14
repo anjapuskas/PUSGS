@@ -22,16 +22,40 @@ namespace UserService.Controllers
         [Authorize(Roles = "SELLER")]
         public async Task<IActionResult> addProduct([FromForm] ProductDTO productDTO)
         {
-            Boolean addProductResult = await _productService.addProduct(productDTO, User);
-            return Ok(addProductResult);
+            List<ProductItemDTO> products = await _productService.addProduct(productDTO, User);
+            return Ok(products);
+        }
+
+        [HttpPut("update")]
+        [Authorize(Roles = "SELLER")]
+        public async Task<IActionResult> updateProduct([FromForm] ProductDTO productDTO)
+        {
+            List<ProductItemDTO> products = await _productService.updateProduct(productDTO, User);
+            return Ok(products);
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "BUYER")]
         public async Task<IActionResult> getAllProducts()
         {
             List<ProductItemDTO> products = await _productService.getAllProducts();
             return Ok(products);
+        }
+
+        [HttpGet("seller/{id}")]
+        [Authorize(Roles = "SELLER")]
+        public async Task<IActionResult> getAllProductsForSeller(long id)
+        {
+            List<ProductItemDTO> products = await _productService.getAllProductsForSeller(id);
+            return Ok(products);
+        }
+
+        [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "SELLER")]
+        public async Task<IActionResult> verifyOrder(long id)
+        {
+            await _productService.delete(id, User);
+            return Ok();
         }
 
     }

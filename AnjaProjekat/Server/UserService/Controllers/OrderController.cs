@@ -51,11 +51,11 @@ namespace UserService.Configuration
         }
 
         [HttpPost("cancel/{id}")]
-        [Authorize(Roles = "BUYER,SELLER")]
+        [Authorize(Roles = "BUYER")]
         public async Task<IActionResult> cancelOrder(long id)
         {
-            await _orderService.cancelOrder(id);
-            return Ok();
+            List<OrderDTO> orders = await _orderService.cancelOrder(id, User);
+            return Ok(orders);
         }
     }
 }

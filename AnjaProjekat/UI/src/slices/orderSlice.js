@@ -93,6 +93,26 @@ const initialState = {
           state.orders = action.payload;
         });
         builder.addCase(cancelOrder.fulfilled, (state, action) => {
+          toast.error("The order has been cancelled", {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
+          state.orders = action.payload;
+        });
+        builder.addCase(cancelOrder.rejected, (state, action) => {
+          let error = ""; 
+          if (typeof action.payload === "string") {
+            error = action.payload;
+          }
+    
+          toast.error(error, {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
         });
         builder.addCase(getNewOrdersAction.fulfilled, (state, action) => {
           state.orders = action.payload;

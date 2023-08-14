@@ -197,6 +197,13 @@ const initialState = {
           state.user.address = action.payload.address;
           state.user.dateOfBirth = action.payload.dateOfBirth;
           state.user.picture = action.payload.picture;
+          
+          toast.success("Profile has been updated", {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
         });
         builder.addCase(profileImageAction.fulfilled, (state, action) => {
           state.user = { ...state.user, imageSrc: action.payload };

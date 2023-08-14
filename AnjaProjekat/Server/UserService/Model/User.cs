@@ -12,5 +12,7 @@
         public UserRole UserRole { get; set; }
         public UserStatus UserStatus { get; set; }
         public byte[]? Picture { get; set; }
+        public virtual List<Product>? Products { get; set; }
+
     }
 }

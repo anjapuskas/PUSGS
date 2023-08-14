@@ -20,11 +20,10 @@ const OrdersListForm = () => {
     dispatch(getAllOrdersAction(user.id));
   }, []);
 
-  const handleCancelOrder = (event, id) => {
+  const handleCancelOrder = (id) => {
     // @ts-ignore
     dispatch(cancelOrder(id));
-    // @ts-ignore
-    dispatch(getAllOrdersAction(id));
+
   };
 
   return (
@@ -52,7 +51,7 @@ const OrdersListForm = () => {
               <TableCell>{order.orderStatus}</TableCell>
               <TableCell>{order.price}</TableCell>
               <TableCell>
-                <Button disabled={order.orderStatus == 'ORDERED'} variant="outlined" color="secondary" onClick={() => handleCancelOrder(order.id)}>
+                <Button disabled={order.orderStatus != 'ORDERED'} variant="outlined" color="secondary" onClick={() => handleCancelOrder(order.id)}>
                   Cancel
                 </Button>
               </TableCell>

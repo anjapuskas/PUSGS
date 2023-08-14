@@ -14,6 +14,7 @@ namespace UserService.Configuration
             builder.Property(product => product.Name).HasMaxLength(60);
             builder.Property(product => product.Name).IsRequired();
             builder.HasIndex(product => product.Name).IsUnique();
+            builder.HasOne(p => p.Seller).WithMany(u => u.Products).HasForeignKey(p => p.SellerId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

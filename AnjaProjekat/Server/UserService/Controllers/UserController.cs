@@ -45,7 +45,7 @@ namespace UserService.Controllers
             return "Hello world";
         }
 
-        [HttpPost("profile")]
+        [HttpPut("profile")]
         [Authorize]
         public async Task<IActionResult> updateProfile([FromForm]ProfileDTO profileDTO)
         {

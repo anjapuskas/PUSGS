@@ -21,7 +21,7 @@ namespace UserService.Service
             _userService = userService;
         }
 
-        public async Task<bool> addProduct(ProductDTO addProductDTO, ClaimsPrincipal claimsPrincipal)
+        public async Task<List<ProductItemDTO>> addProduct(ProductDTO addProductDTO, ClaimsPrincipal claimsPrincipal)
         {
 
             var userIdClaim = claimsPrincipal.Claims.First(c => c.Type == "id").Value;
@@ -45,6 +45,8 @@ namespace UserService.Service
             }
 
             Product product = _mapper.Map<Product>(addProductDTO);
+            product.Seller = user;
+            product.SellerId = userId;
 
             if (addProductDTO.PictureFile != null)
             {
@@ -59,7 +61,54 @@ namespace UserService.Service
             await _repository._productRepository.Insert(product);
             await _repository.SaveChanges();
 
-           return true;
+           return await getAllProductsForSeller(userId);
+        }
+
+        public async Task<List<ProductItemDTO>> updateProduct(ProductDTO updateProductDTO, ClaimsPrincipal claimsPrincipal)
+        {
+
+            var userIdClaim = claimsPrincipal.Claims.First(c => c.Type == "id").Value;
+
+            if (userIdClaim == null)
+            {
+                throw new Exception("Ponovite login");
+            }
+
+            if (!long.TryParse(userIdClaim, out long userId))
+            {
+                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+            }
+
+            User user = await _userService.getUser(userId);
+
+            if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
+            {
+
+                throw new Exception("Korisnik jos nije verifikovan");
+            }
+            Product oldProduct = await _repository._productRepository.Get(updateProductDTO.Id);
+
+            Product product = _mapper.Map<Product>(updateProductDTO);
+            product.Seller = user;
+            product.SellerId = userId;
+
+            if (updateProductDTO.PictureFile != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    updateProductDTO.PictureFile.CopyTo(memoryStream);
+                    var pictureByte = memoryStream.ToArray();
+                    product.Picture = pictureByte;
+                }
+            } else
+            {
+                product.Picture = oldProduct.Picture;
+            }
+
+            _repository._productRepository.Update(product);
+            await _repository.SaveChanges();
+
+            return await getAllProductsForSeller(userId);
         }
 
         public async Task<List<ProductItemDTO>> getAllProducts()
@@ -75,9 +124,66 @@ namespace UserService.Service
             return productDTOs;
         }
 
+        public async Task<List<ProductItemDTO>> getAllProductsForSeller(long id)
+        {
+
+            User user = await _userService.getUser(id);
+
+            if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
+            {
+
+                throw new Exception("Korisnik jos nije verifikovan");
+            }
+
+            var products = await _repository._productRepository.GetAll();
+            List<Product> productList = products.Where(p => p.Amount > 0 && p.SellerId == id).ToList();
+            List<ProductItemDTO> productDTOs = new List<ProductItemDTO>();
+            foreach (Product product in productList)
+            {
+                productDTOs.Add(_mapper.Map<ProductItemDTO>(product));
+            }
+
+            return productDTOs;
+        }
+
         public Task<Product> getProduct(long id)
         {
             return _repository._productRepository.Get(id);
+        }
+
+        public async Task<bool> delete(long id, ClaimsPrincipal claimsPrincipal)
+        {
+            var userIdClaim = claimsPrincipal.Claims.First(c => c.Type == "id").Value;
+
+            if (userIdClaim == null)
+            {
+                throw new Exception("Ponovite login");
+            }
+
+            if (!long.TryParse(userIdClaim, out long userId))
+            {
+                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+            }
+
+            User user = await _userService.getUser(userId);
+
+            if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
+            {
+
+                throw new Exception("Korisnik jos nije verifikovan");
+            }
+
+            var products = await _repository._productRepository.GetAll();
+            Product product = products.Where(p => p.Id == id).FirstOrDefault();
+
+            if (product == null)
+            {
+
+                throw new Exception("Proizvod ne postoji");
+            }
+            _repository._productRepository.Delete(product );
+            await _repository.SaveChanges();
+            return true;
         }
     }
 }

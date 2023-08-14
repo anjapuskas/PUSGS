@@ -132,13 +132,45 @@ namespace UserService.Service
             return orderDTOs;
         }
 
-        public async Task<bool> cancelOrder(long id)
+        public async Task<List<OrderDTO>> cancelOrder(long id, ClaimsPrincipal claimsPrincipal)
         {
+
+            var userIdClaim = claimsPrincipal.Claims.First(c => c.Type == "id").Value;
+
+            if (userIdClaim == null)
+            {
+                throw new Exception("Ponovite login");
+            }
+
+            if (!long.TryParse(userIdClaim, out long userId))
+            {
+                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+            }
+
             Order order = await _repository._orderRepository.Get(id);
+            if (order == null)
+            {
+                throw new Exception("Order does not exist.");
+            }
+            TimeSpan pastTime = DateTime.Now - order.Created; ;
+            if (pastTime.TotalHours > 1)
+            {
+                throw new Exception("The time has passed for cancelling the order.");
+            }
+
             order.OrderStatus = OrderStatus.CANCELLED;
+            var orderProducts = await _repository._orderProductRepository.GetAll();
+            List<OrderProduct> orderProductsList = orderProducts.Where(op => op.OrderId == order.Id).ToList();
+            foreach (OrderProduct orderProduct in order.OrderProducts)
+            {
+                var product = await _repository._productRepository.Get(orderProduct.ProductId);
+                product.Amount += orderProduct.Amount;
+                _repository._productRepository.Update(product);
+            }
+
             _repository._orderRepository.Update(order);
             await _repository.SaveChanges();
-            return true;
+            return await getAllOrders(userId);
         }
     }
 }

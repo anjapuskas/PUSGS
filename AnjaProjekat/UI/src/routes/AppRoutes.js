@@ -3,6 +3,7 @@ import RegistrationForm from "components/Registration/RegistrationForm";
 import AddProductPage from "pages/AddProductPage";
 import AdminOrdersListPage from "pages/AdminOrdersListPage";
 import CartPage from "pages/CartPage";
+import EditProductPage from "pages/EditProductPage";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
 import NewOrdersListPage from "pages/NewOrdersListPage";
@@ -55,6 +56,9 @@ const AppRoutes = () => {
                 )}
                 {isSeller && (
                   <Route path="/new-orders" element={<NewOrdersListPage />} />
+                )}
+                {isSeller && (
+                  <Route path="/product-edit" element={<EditProductPage />} />
                 )}
                 {isAdmin && (
                   <Route path="/admin-orders" element={<AdminOrdersListPage />} />

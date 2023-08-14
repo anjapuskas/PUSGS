@@ -54,10 +54,27 @@ const CartForm = () => {
           price: price,
           userId: id
         };
+
+        if(!address) {
+          toast.error('Please add a address', {
+            position: 'top-center',
+            autoClose: 3000,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
+          return;
+        }
     
         // @ts-ignore
         dispatch(addOrderAction(order));
         dispatch(removeFromCart());
+        toast.success('Order has been placed', {
+          position: 'top-center',
+          autoClose: 3000,
+          closeOnClick: true,
+          pauseOnHover: false,
+        });
+        return;
       };
 
   return (
@@ -162,7 +179,7 @@ const CartForm = () => {
                     <PayPalScriptProvider
                       options={{
                         currency: 'USD',
-                        clientId: 'ASwigux30mI7sbfFlISmuRfC5l-f4SqmCRutHdlhto_OyO7cgtmXcF-kQlPbTE1XDi39uVZI5v0rpDLY'
+                        clientId: process.env.REACT_APP_PAYPAL_CLIENT_ID
                       }}
                     >
                       <PayPalButtons

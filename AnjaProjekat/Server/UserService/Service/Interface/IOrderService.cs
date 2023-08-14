@@ -1,4 +1,5 @@
-﻿using UserService.DTO;
+﻿using System.Security.Claims;
+using UserService.DTO;
 
 namespace UserService.Service.Interface
 {
@@ -12,6 +13,6 @@ namespace UserService.Service.Interface
 
         Task<List<OrderDTO>> getAdminOrders();
 
-        Task<Boolean> cancelOrder(long id);
+        Task<List<OrderDTO>> cancelOrder(long id, ClaimsPrincipal claimsPrincipal);
     }
 }

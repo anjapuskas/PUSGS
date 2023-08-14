@@ -60,6 +60,9 @@ const ProfileForm = () => {
       }
 
         formData.append('pictureFile', picture);
+        if(date) {
+          formData.append('dateOfBirth', date.toUTCString())
+        }
         event.preventDefault();
 
         
@@ -83,7 +86,7 @@ const ProfileForm = () => {
                   className={styles.image}
                 />
               ) : (
-                <div className={styles.placeholder}>Select an Image</div>
+                <div className={styles.placeholder}>No image</div>
               )}
             </div>
           <form className={styles.form} onSubmit={handleSubmit}>

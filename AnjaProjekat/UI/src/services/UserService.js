@@ -51,7 +51,7 @@ export const Profile = async (request) => {
     try {
         const url = `${process.env.REACT_APP_BACKEND_APPLICATION_ENDPOINT}`
     
-        const response = await axiosInstance.post(`${process.env.REACT_APP_BACKEND_APPLICATION_ENDPOINT}/users/profile`, request,
+        const response = await axiosInstance.put(`${process.env.REACT_APP_BACKEND_APPLICATION_ENDPOINT}/users/profile`, request,
         {
             headers: {
                 'Content-Type': 'multipart/form-data',
