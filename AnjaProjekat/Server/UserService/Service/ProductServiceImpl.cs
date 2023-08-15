@@ -28,12 +28,12 @@ namespace UserService.Service
 
             if (userIdClaim == null)
             {
-                throw new Exception("Ponovite login");
+                throw new Exception("Try logging in again");
             }
 
             if (!long.TryParse(userIdClaim, out long userId))
             {
-                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+                throw new Exception("Id must be a number.");
             }
 
             User user = await _userService.getUser(userId);
@@ -41,7 +41,7 @@ namespace UserService.Service
             if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
             {
 
-                throw new Exception("Korisnik jos nije verifikovan");
+                throw new Exception("User is not verified");
             }
 
             Product product = _mapper.Map<Product>(addProductDTO);
@@ -71,12 +71,12 @@ namespace UserService.Service
 
             if (userIdClaim == null)
             {
-                throw new Exception("Ponovite login");
+                throw new Exception("Try logging in again");
             }
 
             if (!long.TryParse(userIdClaim, out long userId))
             {
-                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+                throw new Exception("Id must be a number.");
             }
 
             User user = await _userService.getUser(userId);
@@ -84,13 +84,14 @@ namespace UserService.Service
             if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
             {
 
-                throw new Exception("Korisnik jos nije verifikovan");
+                throw new Exception("User is not verified");
             }
-            Product oldProduct = await _repository._productRepository.Get(updateProductDTO.Id);
-
-            Product product = _mapper.Map<Product>(updateProductDTO);
-            product.Seller = user;
-            product.SellerId = userId;
+            var products = await _repository._productRepository.GetAll();
+            Product product = products.Where(p => p.Id == updateProductDTO.Id).FirstOrDefault();
+            if (product == null)
+            {
+                throw new Exception("The product does not exist");
+            }
 
             if (updateProductDTO.PictureFile != null)
             {
@@ -100,10 +101,11 @@ namespace UserService.Service
                     var pictureByte = memoryStream.ToArray();
                     product.Picture = pictureByte;
                 }
-            } else
-            {
-                product.Picture = oldProduct.Picture;
-            }
+            } 
+            product.Name = updateProductDTO.Name;
+            product.Price = updateProductDTO.Price;
+            product.Amount = updateProductDTO.Amount;
+            product.Description = updateProductDTO.Description;
 
             _repository._productRepository.Update(product);
             await _repository.SaveChanges();
@@ -132,7 +134,7 @@ namespace UserService.Service
             if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
             {
 
-                throw new Exception("Korisnik jos nije verifikovan");
+                throw new Exception("User is not verified");
             }
 
             var products = await _repository._productRepository.GetAll();
@@ -157,12 +159,12 @@ namespace UserService.Service
 
             if (userIdClaim == null)
             {
-                throw new Exception("Ponovite login");
+                throw new Exception("Try logging in again");
             }
 
             if (!long.TryParse(userIdClaim, out long userId))
             {
-                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+                throw new Exception("Id must be a number.");
             }
 
             User user = await _userService.getUser(userId);
@@ -170,7 +172,7 @@ namespace UserService.Service
             if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
             {
 
-                throw new Exception("Korisnik jos nije verifikovan");
+                throw new Exception("User is not verified");
             }
 
             var products = await _repository._productRepository.GetAll();

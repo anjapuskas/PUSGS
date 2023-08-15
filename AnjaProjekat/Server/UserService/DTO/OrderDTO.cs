@@ -10,5 +10,6 @@ namespace UserService.DTO
         public string Created { get; set; }
         public string DeliveryTime { get; set; }
         public string OrderStatus { get; set; }
+        public long UserId { get; set; }
     }
 }

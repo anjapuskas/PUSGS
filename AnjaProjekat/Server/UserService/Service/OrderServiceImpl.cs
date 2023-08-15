@@ -60,7 +60,7 @@ namespace UserService.Service
             return true;
         }
 
-        public async Task<List<OrderDTO>> getAllOrders(long id)
+        public async Task<List<OrderDTO>> getAllBuyerOrders(long id)
         {
             var orders = await _repository._orderRepository.GetAll();
             List<Order> ordersList = orders.Where(o => o.UserId == id && o.OrderStatus != OrderStatus.CANCELLED).ToList();
@@ -77,18 +77,18 @@ namespace UserService.Service
             return orderDTOs;
         }
 
-        public async Task<List<OrderDTO>> getNewOrders(System.Security.Claims.ClaimsPrincipal claimsPrincipal)
+        public async Task<List<OrderDTO>> getSellerOrders(OrderStatus orderStatus, System.Security.Claims.ClaimsPrincipal claimsPrincipal)
         {
             var userIdClaim = claimsPrincipal.Claims.First(c => c.Type == "id").Value;
 
             if(userIdClaim == null)
             {
-                throw new Exception("Ponovite login");
+                throw new Exception("Try logging in again");
             }
 
             if (!long.TryParse(userIdClaim, out long userId))
             {
-                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+                throw new Exception("Id must be a number.");
             }
 
             User user = await _userService.getUser(userId);
@@ -96,12 +96,12 @@ namespace UserService.Service
             if(user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
             {
                 
-                throw new Exception("Korisnik jos nije verifikovan");
+                throw new Exception("User is not verified");
                 
             }
 
             var orders = await _repository._orderRepository.GetAll();
-            List<Order> ordersList = orders.Where(o => o.OrderStatus == OrderStatus.ORDERED).ToList();
+            List<Order> ordersList = orders.Where(o => o.OrderStatus == orderStatus).ToList();
             List<OrderDTO> orderDTOs = new List<OrderDTO>();
             foreach (Order order in ordersList)
             {
@@ -109,7 +109,22 @@ namespace UserService.Service
                 orderDTO.OrderStatus = Enum.GetName(typeof(OrderStatus), order.OrderStatus);
                 orderDTO.Created = order.Created.ToString("yyyy.MM.dd HH:mm:ss");
                 orderDTO.DeliveryTime = order.DeliveryTime.ToString("yyyy.MM.dd HH:mm:ss");
-                orderDTOs.Add(orderDTO);
+                var orderProducts = await _repository._orderProductRepository.GetAll();
+                List<OrderProduct> orderProductList = orderProducts.Where(o => o.OrderId == order.Id).ToList();
+                bool containsProduct = false;
+                foreach (OrderProduct orderProduct in orderProductList)
+                {
+                    Product product = await _repository._productRepository.Get(orderProduct.ProductId);
+                    if (product.SellerId == userId)
+                    {
+                        containsProduct = true;
+                    }
+                }
+                if(containsProduct)
+                {
+                    orderDTOs.Add(orderDTO);
+                }
+                
             }
 
             return orderDTOs;
@@ -139,12 +154,12 @@ namespace UserService.Service
 
             if (userIdClaim == null)
             {
-                throw new Exception("Ponovite login");
+                throw new Exception("Try logging in again");
             }
 
             if (!long.TryParse(userIdClaim, out long userId))
             {
-                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+                throw new Exception("Id must be a number.");
             }
 
             Order order = await _repository._orderRepository.Get(id);
@@ -170,7 +185,45 @@ namespace UserService.Service
 
             _repository._orderRepository.Update(order);
             await _repository.SaveChanges();
-            return await getAllOrders(userId);
+            return await getAllBuyerOrders(userId);
+        }
+
+        public async Task<List<ProductItemDTO>> getProductsForOrder(long id, ClaimsPrincipal claimsPrincipal)
+        {
+            var userIdClaim = claimsPrincipal.Claims.First(c => c.Type == "id").Value;
+
+            if (userIdClaim == null)
+            {
+                throw new Exception("Try logging in again");
+            }
+
+            if (!long.TryParse(userIdClaim, out long userId))
+            {
+                throw new Exception("Id must be a number.");
+            }
+
+            Order order = await _repository._orderRepository.Get(id);
+            if (order == null)
+            {
+                throw new Exception("Order does not exist.");
+            }
+            List<ProductItemDTO> productDTOs = new List<ProductItemDTO>();
+
+
+            var orderProducts = await _repository._orderProductRepository.GetAll();
+            List<OrderProduct> orderProductList = orderProducts.Where(o => o.OrderId == order.Id).ToList();
+
+            foreach (OrderProduct orderProduct in orderProductList)
+            {
+                Product product = await _repository._productRepository.Get(orderProduct.ProductId);
+                if (product.SellerId == userId)
+                {
+                    ProductItemDTO productItemDTO = _mapper.Map<ProductItemDTO>(product);
+                    productItemDTO.Amount = orderProduct.Amount;
+                    productDTOs.Add(productItemDTO);
+                }
+            }
+            return productDTOs;
         }
     }
 }

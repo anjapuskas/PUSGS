@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Container, CssBaseline, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 
 import Navigation from 'components/Navigation/Navigation';
-import { cancelOrder, getAllOrdersAction, getNewOrdersAction } from 'slices/orderSlice';
+import { cancelOrder, getAllOrdersAction, getDeliveredOrdersAction, getNewOrdersAction } from 'slices/orderSlice';
 import { useNavigate } from 'react-router';
 
-const NewOrdersListForm = () => {
+const DeliveredOrdersListForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // @ts-ignore
@@ -18,8 +18,8 @@ const NewOrdersListForm = () => {
 
   useEffect(() => {
 
-    // @ts-ignore
-    dispatch(getNewOrdersAction(user.id));
+    
+    dispatch(getDeliveredOrdersAction(user.id));
   }, []);
 
   const handleDetails = (orderId) => {
@@ -30,6 +30,9 @@ const NewOrdersListForm = () => {
     <>
     <Navigation/>
     <Container className={styles.container}>
+    <Typography variant="h2" component="h2" className={styles.title}>
+      Delivered Orders
+    </Typography>
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -65,4 +68,4 @@ const NewOrdersListForm = () => {
   );
 };
 
-export default NewOrdersListForm;
+export default DeliveredOrdersListForm;

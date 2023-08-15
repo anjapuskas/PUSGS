@@ -28,15 +28,17 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
-    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("ApplicationSettings")["secret"]));
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt")["secret"]));
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true, 
-        ValidateAudience = false, 
+
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = key,
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = true, 
-        ValidIssuer = "https://localhost:44350/", 
-        IssuerSigningKey = key
+        ValidateIssuerSigningKey = true
     };
 });
 

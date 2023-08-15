@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import Product from "models/Product";
 import { toast } from "react-toastify";
-import { AddOrder, CancelOrder, GetAdminOrders, GetAllOrders, GetNewOrders } from "services/OrderService";
+import { AddOrder, CancelOrder, GetAdminOrders, GetAllOrders, GetDeliveredOrders, GetNewOrders, GetProductsForOrder } from "services/OrderService";
 
 
 const initialState = {
-  orders : []
+  orders : [],
+  orderProducts: []
 };
   
   export const addOrderAction = createAsyncThunk(
@@ -24,6 +26,18 @@ const initialState = {
     async (data, thunkApi) => {
       try {
         const response = await GetAllOrders(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.message);
+      }
+    }
+  );
+
+  export const getDeliveredOrdersAction = createAsyncThunk(
+    "orders/delivered",
+    async (data, thunkApi) => {
+      try {
+        const response = await GetDeliveredOrders();
         return thunkApi.fulfillWithValue(response);
       } catch (error) {
         return thunkApi.rejectWithValue(error.message);
@@ -68,6 +82,18 @@ const initialState = {
     }
   );
 
+  export const getProductsForOrder = createAsyncThunk(
+    "orders/products",
+    async (data, thunkApi) => {
+      try {
+        const response = await GetProductsForOrder(data);
+        return thunkApi.fulfillWithValue(response);
+      } catch (error) {
+        return thunkApi.rejectWithValue(error.message);
+      }
+    }
+  );
+
   const orderSlice = createSlice({
     name: "order",
     initialState,
@@ -93,7 +119,7 @@ const initialState = {
           state.orders = action.payload;
         });
         builder.addCase(cancelOrder.fulfilled, (state, action) => {
-          toast.error("The order has been cancelled", {
+          toast.success("The order has been cancelled", {
             position: "top-center",
             autoClose: 2500,
             closeOnClick: true,
@@ -130,8 +156,40 @@ const initialState = {
             pauseOnHover: false,
           });
         });
+        builder.addCase(getDeliveredOrdersAction.fulfilled, (state, action) => {
+          state.orders = action.payload;
+        });
+        builder.addCase(getDeliveredOrdersAction.rejected, (state, action) => {
+          let error = ""; 
+          if (typeof action.payload === "string") {
+            error = action.payload;
+          }
+    
+          toast.error(error, {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
+        });
         builder.addCase(getAdminOrdersAction.fulfilled, (state, action) => {
           state.orders = action.payload;
+        });
+        builder.addCase(getProductsForOrder.fulfilled, (state, action) => {
+          state.orderProducts = action.payload.map(p => new Product(p));
+        });
+        builder.addCase(getProductsForOrder.rejected, (state, action) => {
+          let error = ""; 
+          if (typeof action.payload === "string") {
+            error = action.payload;
+          }
+    
+          toast.error(error, {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
         });
     }
     

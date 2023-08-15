@@ -55,6 +55,10 @@ const Navigation = () => {
     navigate('/new-orders');
   };
 
+  const handleDeliveredOrdersClick = () => {
+    navigate('/delivered-orders');
+  };
+
   const handleAdminOrdersClick = () => {
     navigate('/admin-orders');
   };
@@ -105,12 +109,22 @@ const Navigation = () => {
               </IconButton>
             </div>
           )}
-          {(isBuyer || isSeller) && (
+          {isBuyer && (
             <div style={{padding: 1}}>
               <IconButton edge="start" color="inherit" onClick={handleOrdersClick}>
                 <ViewList />
                 <Typography variant="body1" component="span">
                   Personal Orders
+                </Typography>
+              </IconButton>
+            </div>
+          )}
+          {isSeller && (
+            <div style={{padding: 1}}>
+              <IconButton edge="start" color="inherit" onClick={handleDeliveredOrdersClick}>
+                <ViewStream />
+                <Typography variant="body1" component="span">
+                  Delivered Orders
                 </Typography>
               </IconButton>
             </div>

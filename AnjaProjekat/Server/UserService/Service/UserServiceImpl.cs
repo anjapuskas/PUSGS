@@ -44,7 +44,7 @@ namespace UserService.Service
                 throw new CredentialsException("User is not verified. Please wait from verification from Admin.");
             }
 
-            if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.REJECTED)
+            if (user.UserRole == UserRole.SELLER && user.UserStatus == UserStatus.REJECTED)
             {
                 throw new CredentialsException("User is rejected and can not log in.");
             }
@@ -62,11 +62,12 @@ namespace UserService.Service
                 new Claim(ClaimTypes.Role, user.UserRole.ToString())
             };
 
-            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("ApplicationSettings")["secret"]));
+            SymmetricSecurityKey secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt")["secret"]));
 
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokenOptions = new JwtSecurityToken(
-                issuer: "https://localhost:44350/", 
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
                 claims: claims, 
                 expires: DateTime.Now.AddMinutes(20), 
                 signingCredentials: signinCredentials 
@@ -194,12 +195,12 @@ namespace UserService.Service
 
             if (userIdClaim == null)
             {
-                throw new Exception("Ponovite login");
+                throw new Exception("Try logging in again");
             }
 
             if (!long.TryParse(userIdClaim, out long userId))
             {
-                throw new Exception("Nije moguće pretvoriti ID korisnika u broj.");
+                throw new Exception("Id must be a number.");
             }
 
             User user = await _repository._userRepository.Get(userId);

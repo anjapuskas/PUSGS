@@ -3,10 +3,13 @@ import RegistrationForm from "components/Registration/RegistrationForm";
 import AddProductPage from "pages/AddProductPage";
 import AdminOrdersListPage from "pages/AdminOrdersListPage";
 import CartPage from "pages/CartPage";
+import DeliveredOrdersListPage from "pages/DeliveredOrdersListPage";
+
 import EditProductPage from "pages/EditProductPage";
 import HomePage from "pages/HomePage";
 import LoginPage from "pages/LoginPage";
 import NewOrdersListPage from "pages/NewOrdersListPage";
+import OrderDetailsPage from "pages/OrderDetailsPage";
 import OrdersListPage from "pages/OrdersListPage";
 import ProductListPage from "pages/ProductListPage";
 import ProfilePage from "pages/ProfilePage";
@@ -55,10 +58,16 @@ const AppRoutes = () => {
                   <Route path="/orders" element={<OrdersListPage />} />
                 )}
                 {isSeller && (
+                  <Route path="/delivered-orders" element={<DeliveredOrdersListPage />} />
+                )}
+                {isSeller && (
                   <Route path="/new-orders" element={<NewOrdersListPage />} />
                 )}
                 {isSeller && (
                   <Route path="/product-edit" element={<EditProductPage />} />
+                )}
+                {isSeller && (
+                  <Route path="/order-details" element={<OrderDetailsPage />} />
                 )}
                 {isAdmin && (
                   <Route path="/admin-orders" element={<AdminOrdersListPage />} />
