@@ -79,6 +79,9 @@ const initialState = {
             item.amount--;
         }
       },
+      removeProducts: (state, action) => {
+        state.products = []
+      }
     },
     extraReducers: (builder) => {
         builder.addCase(addProductAction.fulfilled, (state, action) => {
@@ -124,6 +127,6 @@ const initialState = {
     }
     
 });
-export const { amountProductChange } = productSlice.actions;
+export const { amountProductChange, removeProducts } = productSlice.actions;
 
 export default productSlice.reducer;

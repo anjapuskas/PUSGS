@@ -125,8 +125,9 @@ namespace UserService.Service
                     if (product.SellerId == userId)
                     {
                         containsProduct = true;
+                        price += product.Price * orderProduct.Amount;
                     }
-                    price+= product.Price * orderProduct.Amount;
+                    
                 }
                 if(containsProduct)
                 {

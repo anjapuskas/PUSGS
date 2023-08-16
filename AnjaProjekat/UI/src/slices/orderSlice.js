@@ -98,6 +98,10 @@ const initialState = {
     name: "order",
     initialState,
     reducers: {
+      removeOrders: (state, action) => {
+        state.orders = [];
+        state.orderProducts = [];
+      }
     },
     extraReducers: (builder) => {
         builder.addCase(addOrderAction.fulfilled, (state, action) => {
@@ -194,5 +198,8 @@ const initialState = {
     }
     
 });
+
+export const { removeOrders } = orderSlice.actions;
+
 
 export default orderSlice.reducer;

@@ -38,6 +38,7 @@ const initialState = {
                 state.price+=newItem.price;
                 if(state.differentSellers.indexOf(newItem.sellerId) === -1) {
                   state.differentSellers.push(newItem.sellerId);
+                  
                 }
             }
 
@@ -51,7 +52,10 @@ const initialState = {
                 item.amount = item.amount + action.payload.increment;
                 state.price=state.price + item.price*action.payload.increment;
                 state.amount = state.amount + action.payload.increment;
-                if(state.amount == 0) {
+                if(item.amount == 0) {
+                  if (state.products.filter(p => p.sellerId === item.sellerId).length > 0) {
+                    state.differentSellers = state.differentSellers.filter(i => i !== item.sellerId)
+                  }
                   state.products = state.products.filter(i => i.id !== action.payload.id);
                 }
             } 

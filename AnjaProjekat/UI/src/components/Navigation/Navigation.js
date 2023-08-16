@@ -9,6 +9,8 @@ import styles from './Navigation.module.css';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { removeFromCart } from 'slices/cartSlice';
+import { removeProducts } from 'slices/productSlice';
+import { removeOrders } from 'slices/orderSlice';
 
 const Navigation = () => {
   const dispatch = useDispatch();
@@ -74,6 +76,8 @@ const Navigation = () => {
   const handleLogoutClick = () => {
     dispatch(logout());
     dispatch(removeFromCart());
+    dispatch(removeProducts())
+    dispatch(removeOrders())
     handleMenuClose();
   };
 

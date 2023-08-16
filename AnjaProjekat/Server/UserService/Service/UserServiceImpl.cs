@@ -39,7 +39,7 @@ namespace UserService.Service
                 throw new CredentialsException("User does not exist");
             }
 
-            if (user.UserRole == UserRole.SELLER && user.UserStatus != UserStatus.VERIFIED)
+            if (user.UserRole == UserRole.SELLER && user.UserStatus == UserStatus.ON_HOLD)
             {
                 throw new CredentialsException("User is not verified. Please wait from verification from Admin.");
             }
