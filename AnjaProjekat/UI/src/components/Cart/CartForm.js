@@ -18,6 +18,7 @@ const CartForm = () => {
     const [address, setAddress] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('Cash');
     const products = useSelector((state) => state.cart.products);
+    const differentSellers = useSelector((state) => state.cart.differentSellers);
     const amount = useSelector((state) => state.cart.amount);
     const price = useSelector((state) => state.cart.price);
     const id = useSelector((state) => state.user.user.id);
@@ -152,10 +153,10 @@ const CartForm = () => {
                         Price in cart: {price} USD
                     </Typography>
                     <Typography variant="body1" className={styles.summaryItem}>
-                        Delivery Price: 10 USD
+                        Delivery Price: {differentSellers.length * 10} USD
                     </Typography>
                     <Typography variant="body1" className={styles.summaryItem}>
-                        Total Price: {price + 10} USD
+                        Total Price: {price + differentSellers.length * 10} USD
                     </Typography>
                     <Typography variant="body1" className={styles.summaryItem}>
                         Total Amount: {amount}

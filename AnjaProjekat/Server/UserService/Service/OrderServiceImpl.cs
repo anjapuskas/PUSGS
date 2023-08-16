@@ -32,6 +32,7 @@ namespace UserService.Service
             order.Created = DateTime.Now;
             order.DeliveryTime = DateTime.Now.AddHours(1).AddHours(new Random().Next(24));
             order.OrderProducts = new List<OrderProduct>();
+            List<long> differentSellerIds = new List<long>();
 
             foreach (ProductDTO product in createOrderDTO.Products)
             {
@@ -48,11 +49,15 @@ namespace UserService.Service
                     throw new Exception("Nedovoljno kolicine za proizvod " + product.Name);
                 }
                 orderProduct.Product.Amount = orderProduct.Product.Amount - product.Amount;
+                if(!differentSellerIds.Contains(orderProduct.Product.SellerId))
+                {
+                    differentSellerIds.Add(orderProduct.Product.SellerId);
+                }
 
                 order.OrderProducts.Add(orderProduct);
             }
 
-            order.Price = order.Price + 10;
+            order.Price = order.Price + differentSellerIds.Count*10.0;
             await _repository._orderRepository.Insert(order);
             await _repository.SaveChanges();
 
@@ -64,7 +69,7 @@ namespace UserService.Service
         public async Task<List<OrderDTO>> getAllBuyerOrders(long id)
         {
             var orders = await _repository._orderRepository.GetAll();
-            List<Order> ordersList = orders.Where(o => o.UserId == id && o.OrderStatus != OrderStatus.CANCELLED).ToList();
+            List<Order> ordersList = orders.Where(o => o.UserId == id).ToList();
             List<OrderDTO> orderDTOs = new List<OrderDTO>();
             foreach (Order order in ordersList)
             {
@@ -121,7 +126,7 @@ namespace UserService.Service
                     {
                         containsProduct = true;
                     }
-                    price = product.Price * orderProduct.Amount;
+                    price+= product.Price * orderProduct.Amount;
                 }
                 if(containsProduct)
                 {

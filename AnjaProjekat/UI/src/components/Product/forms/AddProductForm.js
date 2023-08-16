@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addProductAction, deleteProductAction, getProductsOfSellerAction } from 'slices/productSlice';
 import Navigation from 'components/Navigation/Navigation';
 import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+
 
 const AddProductForm = () => {
   const [productName, setProductName] = useState('');
@@ -56,9 +58,40 @@ const AddProductForm = () => {
   };
 
   const handleSubmit = (event) => {
+    
 
     const formData = new FormData(event.currentTarget);
+    const amount = formData.get('amount');
+    const price = formData.get('price');
+    const name = formData.get('name');
+    const description = formData.get('description');
     formData.append('pictureFile', picture);
+
+    if (
+      amount == null ||
+      price == null ||
+      name == null 
+    ) {
+      toast.error('Please add the Name Amount and Price', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+      return;
+    }
+
+    if(Number(amount) <= 0 || Number(price) <= 0) {
+      
+      toast.error('Amount and price must be greater than zero', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+      return;
+    }
+
     event.preventDefault();
 
     // @ts-ignore

@@ -10,5 +10,7 @@ namespace UserService.DTO
         public int Amount { get; set; }
         public string Description { get; set; }
         public byte[]? Picture { get; set; }
+        public long SellerId { get; set; }
+
     }
 }
