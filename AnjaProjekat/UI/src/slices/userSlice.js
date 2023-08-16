@@ -212,8 +212,23 @@ const initialState = {
           state.sellers = action.payload.map(u => new User(u));
         });
         builder.addCase(verifySeller.fulfilled, (state, action) => {
+          toast.success("The user has been verified", {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
+          state.sellers = action.payload.map(u => new User(u));
+
         });
         builder.addCase(rejectSeller.fulfilled, (state, action) => {
+          toast.success("The user has been rejected", {
+            position: "top-center",
+            autoClose: 2500,
+            closeOnClick: true,
+            pauseOnHover: false,
+          });
+          state.sellers = action.payload.map(u => new User(u));
         });
     },
     

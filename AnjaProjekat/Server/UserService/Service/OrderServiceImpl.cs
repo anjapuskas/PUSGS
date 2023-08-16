@@ -52,6 +52,7 @@ namespace UserService.Service
                 order.OrderProducts.Add(orderProduct);
             }
 
+            order.Price = order.Price + 10;
             await _repository._orderRepository.Insert(order);
             await _repository.SaveChanges();
 
@@ -105,6 +106,7 @@ namespace UserService.Service
             List<OrderDTO> orderDTOs = new List<OrderDTO>();
             foreach (Order order in ordersList)
             {
+                double price = 0.0;
                 OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
                 orderDTO.OrderStatus = Enum.GetName(typeof(OrderStatus), order.OrderStatus);
                 orderDTO.Created = order.Created.ToString("yyyy.MM.dd HH:mm:ss");
@@ -119,9 +121,11 @@ namespace UserService.Service
                     {
                         containsProduct = true;
                     }
+                    price = product.Price * orderProduct.Amount;
                 }
                 if(containsProduct)
                 {
+                    orderDTO.Price = price;
                     orderDTOs.Add(orderDTO);
                 }
                 

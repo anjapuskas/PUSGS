@@ -288,7 +288,7 @@ namespace UserService.Service
             return  await  _repository._userRepository.Get(id);
         }
 
-        public async Task<bool> verifyUser(long id)
+        public async Task<List<UserVerifyDTO>> verifyUser(long id)
         {
             User user = await _repository._userRepository.Get(id);
             user.UserStatus = UserStatus.VERIFIED;
@@ -297,20 +297,19 @@ namespace UserService.Service
 
             string message = "You have been approved!";
             await _mailService.SendEmail("Verification approved", message, user.Email);
-            return true;
+            return await getSellersForVerification();
         }
 
-        public async Task<bool> rejectUser(long id)
+        public async Task<List<UserVerifyDTO>> rejectUser(long id)
         {
             User user = await _repository._userRepository.Get(id);
             user.UserStatus = UserStatus.REJECTED;
             _repository._userRepository.Update(user);
-            string message = "You have been rejected!";
-
-
-            await _mailService.SendEmail("Verification rejected", message, user.Email);
             await _repository.SaveChanges();
-            return true;
+
+            string message = "You have been rejected!";
+            await _mailService.SendEmail("Verification rejected", message, user.Email);
+            return await getSellersForVerification();
         }
     }
 }

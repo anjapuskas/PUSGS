@@ -51,10 +51,10 @@ const AppRoutes = () => {
                 {isSeller && (
                   <Route path="/add-product" element={<AddProductPage />} />
                 )}
-                {(isBuyer || isSeller) && (
+                {(isBuyer) && (
                   <Route path="/products" element={<ProductListPage />} />
                 )}
-                {(isBuyer || isSeller) && (
+                {(isBuyer) && (
                   <Route path="/orders" element={<OrdersListPage />} />
                 )}
                 {isSeller && (
@@ -75,7 +75,7 @@ const AppRoutes = () => {
                 {isAdmin && (
                   <Route path="/verify-users" element={<VerificationListPage />} />
                 )}
-                {(isBuyer || isSeller) && (
+                {(isBuyer) && (
                   <Route path="/cart" element={<CartPage />} />
                 )}
                 

@@ -73,16 +73,16 @@ namespace UserService.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> verifyOrder(long id)
         {
-            await _userService.verifyUser(id);
-            return Ok();
+            List<UserVerifyDTO> users = await _userService.verifyUser(id);
+            return Ok(users);
         }
 
         [HttpPost("reject/{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> rejectOrder(long id)
         {
-            await _userService.rejectUser(id);
-            return Ok();
+            List<UserVerifyDTO> users = await _userService.rejectUser(id);
+            return Ok(users);
         }
     }
 }

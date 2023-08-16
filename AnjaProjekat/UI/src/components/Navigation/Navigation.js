@@ -99,7 +99,7 @@ const Navigation = () => {
               </IconButton>
             </div>
           )}
-          {(isBuyer || isSeller) && (
+          {isBuyer && (
             <div style={{padding: 1}}>
               <IconButton edge="start" color="inherit" onClick={handleProductsClick}>
                 <InventoryIcon />
@@ -160,7 +160,7 @@ const Navigation = () => {
             </div>
           )}
           <div style={{ flexGrow: 1 }} />
-          {(isBuyer || isSeller) && (
+          {(isBuyer) && (
             <div>
               <IconButton edge="start" color="inherit" onClick={handleCartClick}>
                 <ShoppingCartIcon />

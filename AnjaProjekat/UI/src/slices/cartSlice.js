@@ -22,6 +22,7 @@ const initialState = {
             } else {
                 const newItem = {
                     id: action.payload.id,
+                    picture: action.payload.picture,
                     name: action.payload.name,
                     price: action.payload.price,
                     description: action.payload.description,

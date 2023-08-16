@@ -26,6 +26,20 @@ namespace UserService.Configuration
             builder.Property(user => user.Address).IsRequired(false);
             builder.Property(user => user.UserRole).HasConversion(new EnumToStringConverter<UserRole>());
             builder.Property(user => user.UserStatus).HasConversion(new EnumToStringConverter<UserStatus>());
+
+            builder.HasData(new User
+            {
+                Id = 1,
+                Username = "anjaAdmin",
+                Email = "anjaAdmin@gmail.com",
+                FirstName = "Anja",
+                LastName = "Puskas",
+                Password = BCrypt.Net.BCrypt.HashPassword("anjaAdmin"),
+                Address = "Lukijana Musickog 43",
+                UserRole = UserRole.ADMIN,
+                UserStatus = UserStatus.VERIFIED,
+                DateOfBirth = new DateTime(1996, 5, 24)
+            });
         }
     }
 }

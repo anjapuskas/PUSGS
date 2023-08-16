@@ -42,39 +42,42 @@ const CartForm = () => {
         dispatch(amountChange(amountChangeObj))
       };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-    
-        
-        const order = {
-          products: products,
-          address: address,
-          comment: comment,
-          amount: amount,
-          price: price,
-          userId: id
-        };
+    const orderFromCart = () => {
+      const order = {
+        products: products,
+        address: address,
+        comment: comment,
+        amount: amount,
+        price: price,
+        userId: id
+      };
 
-        if(!address) {
-          toast.error('Please add a address', {
-            position: 'top-center',
-            autoClose: 3000,
-            closeOnClick: true,
-            pauseOnHover: false,
-          });
-          return;
-        }
-    
-        // @ts-ignore
-        dispatch(addOrderAction(order));
-        dispatch(removeFromCart());
-        toast.success('Order has been placed', {
+      if(!address) {
+        toast.error('Please add a address', {
           position: 'top-center',
           autoClose: 3000,
           closeOnClick: true,
           pauseOnHover: false,
         });
         return;
+      }
+  
+      // @ts-ignore
+      dispatch(addOrderAction(order));
+      dispatch(removeFromCart());
+      toast.success('Order has been placed', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+      return;
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+    
+        orderFromCart();
       };
 
   return (
@@ -100,7 +103,12 @@ const CartForm = () => {
           {products.map(product => (
             <TableRow key={product.id}>
               <TableCell className={styles.imageCell}>
-                <img src={product.imageUrl} alt={product.name} width="50" height="50" />
+              {product.picture && (
+                      <img
+                        src={`data:image/jpg;base64,${product.picture}`}
+                        style={{ width: '80px', height: '80px' }}
+                      />
+                    )}
               </TableCell>
               <TableCell>{product.name}</TableCell>
               <TableCell sx={{
@@ -141,7 +149,13 @@ const CartForm = () => {
                         Cart Summary
                     </Typography>
                     <Typography variant="body1" className={styles.summaryItem}>
-                        Total Price: {price} USD
+                        Price in cart: {price} USD
+                    </Typography>
+                    <Typography variant="body1" className={styles.summaryItem}>
+                        Delivery Price: 10 USD
+                    </Typography>
+                    <Typography variant="body1" className={styles.summaryItem}>
+                        Total Price: {price + 10} USD
                     </Typography>
                     <Typography variant="body1" className={styles.summaryItem}>
                         Total Amount: {amount}
@@ -166,62 +180,6 @@ const CartForm = () => {
                         value={address}
                         onChange={handleAddressChange}
                     />
-                    <RadioGroup
-                      aria-labelledby='RoleLabel'
-                      defaultValue='1'
-                      value={paymentMethod}
-                      onChange={handlePaymentMethod}
-                    >
-                      <FormControlLabel value='Cash' control={<Radio />} label='Cash' />
-                      <FormControlLabel value='Card' control={<Radio />} label='Card' />
-                    </RadioGroup>
-                    {paymentMethod === 'Card' && products.length !== 0 && address.length !== 0 && (
-                    <PayPalScriptProvider
-                      options={{
-                        currency: 'USD',
-                        clientId: process.env.REACT_APP_PAYPAL_CLIENT_ID
-                      }}
-                    >
-                      <PayPalButtons
-                        style={{ label: 'checkout' }}
-                        createOrder={async (data, actions) => {
-                          return actions.order
-                            .create({
-                              purchase_units: [
-                                {
-                                  amount: {
-                                    value: price.toFixed(2)
-                                      .toString(),
-                                    currency_code: 'USD'
-                                  }
-                                }
-                              ]
-                            })
-                            .then((result) => {
-                              return result
-                            })
-                            .catch((error) => {
-                              return Promise.reject('')
-                            })
-                        }}
-                        onApprove={async (data, actions) => {
-                          return actions.order
-                            ?.capture()
-                            .then(() => {
-                              toast.success('Registration successful', {
-                                position: "top-center",
-                                autoClose: 2500,
-                                closeOnClick: true,
-                                pauseOnHover: false,
-                              });
-                              //makeOrder(true)
-                            })
-                            .catch(() => {
-                            })
-                        }}
-                      />
-                    </PayPalScriptProvider>
-                  )}
                     <Button variant="contained" type="submit" color="primary" className={styles.button} fullWidth>
                         Proceed to Checkout
                     </Button>

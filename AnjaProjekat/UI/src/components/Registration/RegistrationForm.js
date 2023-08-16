@@ -83,6 +83,16 @@ const RegistrationForm = () => {
       return;
     }
 
+    if (password.length < 8) {
+      toast.error('Password needs to be at least 8 characters long', {
+        position: 'top-center',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+      return;
+    }
+
     if (password !== passwordRepeat) {
       toast.error('Passwords do not match', {
         position: 'top-center',

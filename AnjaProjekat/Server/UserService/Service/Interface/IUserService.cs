@@ -13,8 +13,8 @@ namespace UserService.Service.Interface
         Task<ProfileImageDTO> getProfileImage(long id);
         Task<User> getUser(long id);
         Task<List<UserVerifyDTO>> getSellersForVerification();
-        Task<Boolean> verifyUser(long id);
-        Task<Boolean> rejectUser(long id);
+        Task<List<UserVerifyDTO>> verifyUser(long id);
+        Task<List<UserVerifyDTO>> rejectUser(long id);
 
     }
 }

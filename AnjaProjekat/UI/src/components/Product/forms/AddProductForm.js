@@ -63,6 +63,7 @@ const AddProductForm = () => {
 
     // @ts-ignore
     dispatch(addProductAction(formData));
+    window.location.reload();
     
   };
 

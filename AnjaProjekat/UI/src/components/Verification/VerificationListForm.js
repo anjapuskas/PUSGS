@@ -23,8 +23,6 @@ const VerificationListForm = () => {
   const handleVerify = (id) => {
     // @ts-ignore
     dispatch(verifySeller(id));
-    // @ts-ignore
-    window.location.reload(false);
   };
 
   const handleReject = (id) => {

@@ -50,8 +50,8 @@ const OrderDetailsForm = () => {
                     )}
                     </TableCell>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.price}</TableCell>
                     <TableCell>{product.amount}</TableCell>
+                    <TableCell>{product.price}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
