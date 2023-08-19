@@ -12,7 +12,6 @@ namespace UserService.Configuration
     {
 
         private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
 
         public OrderController(IOrderService orderService)
         {
