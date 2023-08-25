@@ -78,38 +78,13 @@ namespace WebShop.Service
             foreach (User user in usersList)
             {
                 UserVerifyDTO userVerifyDTO = _mapper.Map<UserVerifyDTO>(user);
-                userVerifyDTO.UserStatus= Enum.GetName(typeof(UserStatus), user.UserStatus);
+                userVerifyDTO.UserStatus = Enum.GetName(typeof(UserStatus), user.UserStatus);
                 userVerifyDTO.DateOfBirth = user.DateOfBirth.ToString("yyyy.MM.dd HH:mm:ss");
                 userVerifyDTO.Name = user.FirstName + " " + user.LastName;
                 userVerifyDTOs.Add(userVerifyDTO);
             }
 
             return userVerifyDTOs;
-        }
-
-        private string resolveImage (string oldImage, IFormFile newImage, string username)
-        {
-
-
-            if (oldImage != null)
-            {
-                if (File.Exists(oldImage))
-                {
-                    File.Delete(oldImage);
-                }
-            }
-
-            string imagePath = "C:\\Images\\Users";
-            
-            string imageName = username + Path.GetExtension(newImage.FileName);
-            imagePath = Path.Combine(imagePath, imageName);
-
-            using (var fileStream = new FileStream(imagePath, FileMode.Create, FileAccess.Write))
-            {
-                newImage.CopyToAsync(fileStream);
-            }
-
-            return imagePath;
         }
 
         public async Task<ProfileImageDTO> getProfileImage(long id)

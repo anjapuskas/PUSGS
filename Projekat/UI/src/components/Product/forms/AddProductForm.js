@@ -58,7 +58,8 @@ const AddProductForm = () => {
   };
 
   const handleSubmit = (event) => {
-    
+    event.preventDefault();
+
 
     const formData = new FormData(event.currentTarget);
     const amount = formData.get('amount');
@@ -81,7 +82,7 @@ const AddProductForm = () => {
       return;
     }
 
-    if(Number(amount) <= 0 || Number(price) <= 0) {
+    if(isNaN(amount) || isNaN(price) || Number(amount) <= 0 || Number(price) <= 0) {
       
       toast.error('Amount and price must be greater than zero', {
         position: 'top-center',
@@ -92,11 +93,9 @@ const AddProductForm = () => {
       return;
     }
 
-    event.preventDefault();
 
     // @ts-ignore
     dispatch(addProductAction(formData));
-    window.location.reload();
     
   };
 
